@@ -3,7 +3,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 const months = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 // const week_days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const week_days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const days = [28 || 29, 30, 31];
 const date = new Date();
 const year = date.getFullYear();
@@ -95,27 +95,75 @@ function objMaker() {
     });
 }
 objMaker();
-class Grid extends React.Component {
-    return({ months, map }) { }
-}
-((month, i) => (<div className=" inline-block w-full mx-8 border border-black">
-			    <p className="block text-center py-1.5 ">{month}</p>
-			    <table>
+function Grid(props) {
+    let x = props.x;
+    let y = props.y;
+    let pic = props.pic;
+    let col = props.col;
+    return (<div className={`grid grid-cols-2 place-content-evenly bg-fixed gap-y-16 bg-center bg-no-repeat w-screen h-screen overscroll-contain place-items-center sticky px-4 gap-x-4 ${pic} bg-cover bg-fixed`}>
+	    {months.map((month, i) => {
+            if (i >= x && i <= y) {
+                return <div className={`inline-block w-full mx-8 border border-black ${col}`}>
+			<p className="block text-center py-1.5 ">{month}</p>
+			<table className="table-fixed w-full">
+			    <thead>
 				<tr>
-				     week_days.map(day => (
-					if(day == "Sunday" || day == "Saturday") {<th class="text-slate-700 border-y-2 border-black px-2 py-1.5 font-mono font-medium">{day}</th>}))
+				    {weekDays.map((day) => {
+                        if (day === "Sunday" || day === "Saturday") {
+                            return <th className="text-indigo-900 border-y-2 border-black px-2 py-1.5 font-mono font-medium">{day}</th>;
+                        }
+                        else {
+                            return <th className="text-slate-900 border-y-2 border-black px-2 py-1.5 font-mono font-medium">{day}</th>;
+                        }
+                    })}
 				</tr>
-			    </table>
-			</div>));
+			    </thead>
+			    <tbody>
+				{monCal[i].map((week, j) => (<tr>
+					{week.map((theDay, k) => {
+                            let p = (j * 7) + (k + 1);
+                            if (theDay > 13 && theDay > p && i === 0) {
+                                return (<td className={`border-t border-black  ${theDay}-${months[11]}-${year - 1} `}>
+							<button className="px-2 border-black border rounded-full m-2 w-min btn">{theDay}</button>
+						    </td>);
+                            }
+                            else if (theDay > 13 && theDay > p) {
+                                return (<td className={`border-t border-black ${theDay}-${months[i - 1]}-${year}`}>
+							<button className="px-2 border-black border rounded-full m-2 w-min btn">{theDay}</button>
+						    </td>);
+                            }
+                            else if (theDay < 14 && p > monLen[i] && i === 11) {
+                                return (<td className={`border-t border-black ${theDay}-${months[0]}-${year + 1}`}>
+							<button className="px-2 border-black border rounded-full m-2 w-min btn">{theDay}</button>
+						    </td>);
+                            }
+                            else if (theDay < 14 && p > monLen[i]) {
+                                return (<td className={`border-t border-black ${theDay}-${months[i + 1]}-${year}`}>
+							<button className="px-2 border-black border rounded-full m-2 w-min btn">{theDay}</button>
+						    </td>);
+                            }
+                            else {
+                                return (<td className={`border-t border-black ${theDay}-${month}-${year}`}>
+							<button className="px-2 border-black border rounded-full m-2 w-min btn">{theDay}</button>
+						    </td>);
+                            }
+                        })}
+				    </tr>))}
+			    </tbody>
+			</table>
+		    </div>;
+            }
+        })}
+	</div>);
+}
 ;
 function Page() {
-    return (<div className=' bg-gray-700 '>
+    return (<body className='bg-slate-400 overflow-x-clip"'>
 			<h1 className="text-white text-2xl text-center pt-6">Welcome to {year}</h1>
-			<div className='grid grid-cols-2 place-content-evenly bg-fixed gap-y-16 bg-center
-		bg-no-repeat w-screen h-screen overscroll-contain place-items-center sticky px-4 gap-x-4'>
-			    <Grid />
-			</div>
-		</div>);
+			<Grid x={0} y={3} pic="bg-snow" col="bg-[#666666]/60"/>
+			<Grid x={4} y={7} pic="bg-summer" col="bg-[#666666]/60"/>
+	    <Grid x={8} y={11} pic="bg-autumn" col="bg-[#666666]/60"/>
+		</body>);
 }
 ;
 const root = ReactDOM.createRoot(document.getElementById("root"));

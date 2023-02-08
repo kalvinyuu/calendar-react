@@ -103,7 +103,7 @@ arrSplit()
 
 function objMaker() {
     months.forEach((e, i) => {
-	yearObj[e] = monCal[i]
+	yearObj[e] = monCal[i] 
     })
 }
 objMaker()
@@ -111,21 +111,23 @@ objMaker()
 function Grid(props: any) {
     let x = props.x
     let y = props.y
+    let pic = props.pic
+    let col = props.col
     return (
-	<div className='grid grid-cols-2 place-content-evenly bg-fixed gap-y-16 bg-center bg-no-repeat w-screen h-screen overscroll-contain place-items-center sticky px-4 gap-x-4'>
+	<div className={`grid grid-cols-2 place-content-evenly bg-fixed gap-y-16 bg-center bg-no-repeat w-screen h-screen overscroll-contain place-items-center sticky px-4 gap-x-4 ${pic} bg-cover bg-fixed`} >
 	    {months.map((month, i) => {
 		if (i >= x && i <= y) {
-		    return <div className=" inline-block w-full mx-8 border border-black">
+		    return <div className= {`inline-block w-full mx-8 border border-black ${col}`} >
 			<p className="block text-center py-1.5 ">{month}</p>
 			<table className="table-fixed w-full">
 			    <thead>
 				<tr>
 				    {weekDays.map((day) => {
 					if (day === "Sunday" || day === "Saturday") {
-					    return <th className="text-blue-700 border-y-2 border-black px-2 py-1.5 font-mono font-medium" >{day}</th>
+					    return <th className="text-indigo-900 border-y-2 border-black px-2 py-1.5 font-mono font-medium" >{day}</th>
 					}
 					else {
-					    return <th className="text-slate-700 border-y-2 border-black px-2 py-1.5 font-mono font-medium">{day}</th>
+					    return <th className="text-slate-900 border-y-2 border-black px-2 py-1.5 font-mono font-medium">{day}</th>
 					}
 				    })}
 				</tr>
@@ -138,35 +140,35 @@ function Grid(props: any) {
 					    if(theDay > 13 && theDay > p && i === 0) { 
 						return (
 						    <td className={`border-t border-black  ${theDay}-${months[11]}-${year - 1} `}>
-							<button className="px-2 border-black border rounded-full m-2 w-min">{theDay}</button>
+							<button className="px-2 border-black border rounded-full m-2 w-min btn">{theDay}</button>
 						    </td>
 						)
 					    }
 					    else if(theDay > 13 && theDay > p) { 
 						return (
 						    <td className={`border-t border-black ${theDay}-${months[i-1]}-${year}`}>
-							<button className="px-2 border-black border rounded-full m-2 w-min">{theDay}</button>
+							<button className="px-2 border-black border rounded-full m-2 w-min btn">{theDay}</button>
 						    </td>
 						)
 					    }
 					    else if(theDay < 14 && p > monLen[i] && i === 11) {
 						return (
 						    <td className={`border-t border-black ${theDay}-${months[0]}-${year + 1}`}>
-							<button className="px-2 border-black border rounded-full m-2 w-min">{theDay}</button>
+							<button className="px-2 border-black border rounded-full m-2 w-min btn">{theDay}</button>
 						    </td>
 						)
 					    }
 					    else if(theDay < 14 && p > monLen[i]) {
 						return (
 						    <td className={`border-t border-black ${theDay}-${months[i+1]}-${year}`}>
-							<button className="px-2 border-black border rounded-full m-2 w-min">{theDay}</button>
+							<button className="px-2 border-black border rounded-full m-2 w-min btn">{theDay}</button>
 						    </td>
 						)
 					    }
 					    else { 
 						return (
 						    <td className={`border-t border-black ${theDay}-${month}-${year}`}>
-							<button className="px-2 border-black border rounded-full m-2 w-min">{theDay}</button>
+							<button className="px-2 border-black border rounded-full m-2 w-min btn">{theDay}</button>
 						    </td>
 						)
 					    }
@@ -184,14 +186,16 @@ function Grid(props: any) {
 
 function Page() {
 	return (
-	    <body className='bg-slate-400 overflow-x-clip"'>
-		<h1 className="text-white text-2xl text-center pt-6">Welcome to {year}</h1>
-		<Grid x={0} y={3} />
-		<Grid x={4} y={7} />
-	    <Grid x={8} y={11} />
-	</body>
-    )
+		<body className='bg-slate-400 overflow-x-clip"'>
+			<h1 className="text-white text-2xl text-center pt-6">Welcome to {year}</h1>
+			<Grid x={0} y={3} pic="bg-snow" col="bg-[#666666]/60" />
+			<Grid x={4} y={7} pic="bg-summer" col="bg-[#666666]/60"/>
+	    <Grid x={8} y={11} pic="bg-autumn" col="bg-[#666666]/60" />
+		</body>
+	)
 };
+
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<Page />);
 
