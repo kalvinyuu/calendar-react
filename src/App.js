@@ -101,14 +101,14 @@ function Grid(props) {
     let pic = props.pic;
     let col = props.col;
     return (<div className={`grid grid-cols-2 place-content-evenly bg-fixed gap-y-16 bg-center bg-no-repeat w-screen h-screen overscroll-contain place-items-center sticky px-4 gap-x-4 ${pic} bg-cover bg-fixed`}>
-	    {months.map((month, i) => {
+	{months.map((month, i) => {
             if (i >= x && i <= y) {
                 return <div className={`inline-block w-full mx-8 border border-black ${col}`}>
-			<p className="block text-center py-1.5 ">{month}</p>
-			<table className="table-fixed w-full">
-			    <thead>
-				<tr>
-				    {weekDays.map((day) => {
+		    <p className="block text-center py-1.5 ">{month}</p>
+		    <table className="table-fixed w-full">
+			<thead>
+			    <tr>
+				{weekDays.map((day) => {
                         if (day === "Sunday" || day === "Saturday") {
                             return <th className="text-indigo-900 border-y-2 border-black px-2 py-1.5 font-mono font-medium">{day}</th>;
                         }
@@ -116,42 +116,42 @@ function Grid(props) {
                             return <th className="text-slate-900 border-y-2 border-black px-2 py-1.5 font-mono font-medium">{day}</th>;
                         }
                     })}
-				</tr>
-			    </thead>
-			    <tbody>
-				{monCal[i].map((week, j) => (<tr>
-					{week.map((theDay, k) => {
+			    </tr>
+			</thead>
+			<tbody>
+			    {monCal[i].map((week, j) => (<tr>
+				    {week.map((theDay, k) => {
                             let p = (j * 7) + (k + 1);
                             if (theDay > 13 && theDay > p && i === 0) {
                                 return (<td className={`border-t border-black  ${theDay}-${months[11]}-${year - 1} `}>
-							<button className="px-2 border-black border rounded-full m-2 w-min btn">{theDay}</button>
-						    </td>);
+						    <button className={`px-2 border-black border rounded-full m-2 w-min btn-${theDay}-${months[11]}-${year - 1}`} onClick={() => trigger(event)}>{theDay}</button>
+						</td>);
                             }
                             else if (theDay > 13 && theDay > p) {
                                 return (<td className={`border-t border-black ${theDay}-${months[i - 1]}-${year}`}>
-							<button className="px-2 border-black border rounded-full m-2 w-min btn">{theDay}</button>
-						    </td>);
+						    <button className={`px-2 border-black border rounded-full m-2 w-min btn-${theDay}-${months[i - 1]}-${year}`} onClick={() => trigger(event)}>{theDay}</button>
+						</td>);
                             }
                             else if (theDay < 14 && p > monLen[i] && i === 11) {
                                 return (<td className={`border-t border-black ${theDay}-${months[0]}-${year + 1}`}>
-							<button className="px-2 border-black border rounded-full m-2 w-min btn">{theDay}</button>
-						    </td>);
+						    <button className={`px-2 border-black border rounded-full m-2 w-min btn-${theDay}-${months[0]}-${year + 1}`} onClick={() => trigger(event)}>{theDay}</button>
+						</td>);
                             }
                             else if (theDay < 14 && p > monLen[i]) {
                                 return (<td className={`border-t border-black ${theDay}-${months[i + 1]}-${year}`}>
-							<button className="px-2 border-black border rounded-full m-2 w-min btn">{theDay}</button>
-						    </td>);
+						    <button className={`px-2 border-black border rounded-full m-2 w-min btn-${theDay}-${months[i + 1]}-${year}`} onClick={() => trigger(event)}>{theDay}</button>
+						</td>);
                             }
                             else {
                                 return (<td className={`border-t border-black ${theDay}-${month}-${year}`}>
-							<button className="px-2 border-black border rounded-full m-2 w-min btn">{theDay}</button>
-						    </td>);
+						    <button className={`px-2 border-black border rounded-full m-2 w-min btn-${theDay}-${month}-${year}`} onClick={() => trigger(event)}>{theDay}</button>
+						</td>);
                             }
                         })}
-				    </tr>))}
-			    </tbody>
-			</table>
-		    </div>;
+				</tr>))}
+			</tbody>
+		    </table> 
+		</div>;
             }
         })}
 	</div>);
@@ -159,13 +159,17 @@ function Grid(props) {
 ;
 function Page() {
     return (<body className='bg-slate-400 overflow-x-clip"'>
-			<h1 className="text-white text-2xl text-center pt-6">Welcome to {year}</h1>
-			<Grid x={0} y={3} pic="bg-snow" col="bg-[#666666]/60"/>
-			<Grid x={4} y={7} pic="bg-summer" col="bg-[#666666]/60"/>
+	    <h1 className="text-white text-2xl text-center pt-6">Welcome to {year}</h1>
+	    <Grid x={0} y={3} pic="bg-snow" col="bg-[#666666]/60"/>
+	    <Grid x={4} y={7} pic="bg-summer" col="bg-[#666666]/60"/>
 	    <Grid x={8} y={11} pic="bg-autumn" col="bg-[#666666]/60"/>
-		</body>);
+	</body>);
 }
 ;
+function trigger(event) {
+    let parent = event.currentTarget.parentElement.class;
+    parent.appendChild(document.createElement('a'));
+}
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<Page />);
 export default Page;
