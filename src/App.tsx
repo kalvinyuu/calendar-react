@@ -2,6 +2,7 @@ import './App.css';
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 
 const months = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 // const week_days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -108,97 +109,143 @@ function objMaker() {
 }
 objMaker()
 
+function TableDate(props: any) {
+	const [showModal, setShowModal] = useState(false);
+	let uuid = props.uuid
+	let today = props.today
+    return (
+	<>
+		<td className={`border-t border-black  ${uuid} `}>
+			<button onClick={() => setShowModal(true)} key={`gen-${uuid}`} className={`px-2 border-black border rounded-full m-2 w-min btn-${uuid}`}>{today}</button>
+		</td>
+	    {showModal && (
+			<Fun onClose={() => setShowModal(false)} />
+		)
+	    }
+	</>
+    )
+}
+
+function TableDateCopy(props: any) {
+	const [showModal, setShowModal] = useState(false);
+	let uuid = props.uuid
+	let today = props.today
+	return (
+		<>
+			<td className={`border-t border-black  ${uuid} `}>
+				<button onClick={() => setShowModal(true)} key={`carbonCopy-${uuid}`} className={`px-2 border-black border rounded-full m-2 xgw-min btn-${uuid}`}>{today}</button>
+			</td>
+			{showModal &&(
+				<Fun onClose={() => setShowModal(false)} />
+			)
+	    }
+	</>
+	)
+}
+
 function Grid(props: any) {
-    let x = props.x
+    
+	let x = props.x
     let y = props.y
     let pic = props.pic
     let col = props.col
     return (
-	<div className={`grid grid-cols-2 place-content-evenly bg-fixed gap-y-16 bg-center bg-no-repeat w-screen h-screen overscroll-contain place-items-center sticky px-4 gap-x-4 ${pic} bg-cover bg-fixed`} >
+	<div className={`grid grid-cols-2 place-content-evenly bg-fixed gap-y-16 bg-center bg-no-repeat w-screen h-screen place-items-center sticky px-4 gap-x-4 ${pic} bg-cover bg-fixed`} >
 	{months.map((month, i) => {
 	    if (i >= x && i <= y) {
 		return <div className={`inline-block w-full mx-8 border border-black ${col}`} >
-		    <p className="block text-center py-1.5 ">{month}</p>
-		    <table className="table-fixed w-full">
-			<thead>
-			    <tr>
-				{weekDays.map((day) => {
-				    if (day === "Sunday" || day === "Saturday") {
-					return <th className="text-indigo-900 border-y-2 border-black px-2 py-1.5 font-mono font-medium" >{day}</th>
-				    }
-				    else {
-					return <th className="text-slate-900 border-y-2 border-black px-2 py-1.5 font-mono font-medium">{day}</th>
-				    }
-				})}
-			    </tr>
-			</thead>
-			<tbody>
-			    {monCal[i].map((week: number[], j) => (
-				<tr>
-				    {week.map((theDay, k) => {
-					let p = (j * 7) + (k + 1)
-					if (theDay > 13 && theDay > p && i === 0) {
-					    return (
-						<td className={`border-t border-black  ${theDay}-${months[11]}-${year - 1} `}>
-						    <button className={`px-2 border-black border rounded-full m-2 w-min btn-${theDay}-${months[11]}-${year - 1}`} onClick={() => trigger(event)}>{theDay}</button>
-						</td>
-					    )
-					}
-					else if (theDay > 13 && theDay > p) {
-					    return (
-						<td className={`border-t border-black ${theDay}-${months[i - 1]}-${year}`}>
-						    <button className={`px-2 border-black border rounded-full m-2 w-min btn-${theDay}-${months[i - 1]}-${year}`} onClick={() => trigger(event)}>{theDay}</button>
-						</td>
-					    )
-					}
-					else if (theDay < 14 && p > monLen[i] && i === 11) {
-					    return (
-						<td className={`border-t border-black ${theDay}-${months[0]}-${year + 1}`}>
-						    <button className={`px-2 border-black border rounded-full m-2 w-min btn-${theDay}-${months[0]}-${year + 1}`} onClick={() => trigger(event)}>{theDay}</button>
-						</td>
-					    )
-					}
-					else if (theDay < 14 && p > monLen[i]) {
-					    return (
-						<td className={`border-t border-black ${theDay}-${months[i + 1]}-${year}`}>
-						    <button className={`px-2 border-black border rounded-full m-2 w-min btn-${theDay}-${months[i + 1]}-${year}`} onClick={() => trigger(event)}>{theDay}</button>
-						</td>
-					    )
-					}
-					else {
-					    return (
-						<td className={`border-t border-black ${theDay}-${month}-${year}`}>
-						    <button className={`px-2 border-black border rounded-full m-2 w-min btn-${theDay}-${month}-${year}`} onClick={() => trigger(event)}>{theDay}</button>
-						</td>
-					    )
-					}
-				    })}
-				</tr>
-			    ))}
-			</tbody>
-		    </table> 
+		<p className="block text-center py-1.5 ">{month}</p>
+		<table className="table-fixed w-full wrapper">
+		<thead>
+		<tr>
+		{weekDays.map((day) => {
+		    if (day === "Sunday" || day === "Saturday") {
+			return <th className="text-indigo-900 border-y-2 border-black px-2 py-1.5 font-mono font-medium" >{day}</th>
+		    }
+		    else {
+			return <th className="text-slate-900 border-y-2 border-black px-2 py-1.5 font-mono font-medium">{day}</th>
+		    }
+		})}
+		</tr>
+		</thead>
+		<tbody>
+		{monCal[i].map((week: number[], j) => (
+		    <tr>
+		    {week.map((theDay, k) => {
+			let p = (j * 7) + (k + 1)
+			if (theDay > 13 && theDay > p && i === 0) {
+			    return (
+				<TableDateCopy uuid={`${theDay}-${months[11]}-${year - 1}`} today={theDay} />
+			)}
+			else if (theDay > 13 && theDay > p) {
+			    return (
+				<TableDateCopy uuid={`${theDay}-${months[i - 1]}-${year}`} today={theDay} />
+			)}
+			else if (theDay < 14 && p > monLen[i] && i === 11) {
+			    return (
+				<TableDateCopy uuid={`${theDay}-${months[0]}-${year + 1}`} today={theDay} />
+			)}
+			else if (theDay < 14 && p > monLen[i]) {
+			    return (
+				<TableDateCopy uuid={`${theDay}-${months[i + 1]}-${year}`} today={theDay} />
+			)}
+			else {
+			    return (
+				<TableDate uuid={`${theDay}-${month}-${year}`} today={theDay} />
+			)}
+		    })}
+		    </tr>
+		))}
+		</tbody>
+		</table>
 		</div>
 	    }
-			    })}
+	})}
 	</div>
     )
 };
-
 function Page() {
-    return (
-	<body className='bg-slate-400 overflow-x-clip"'>
-	    <h1 className="text-white text-2xl text-center pt-6">Welcome to {year}</h1>
-	    <Grid x={0} y={3} pic="bg-snow" col="bg-[#666666]/60" />
-	    <Grid x={4} y={7} pic="bg-summer" col="bg-[#666666]/60"/>
-	    <Grid x={8} y={11} pic="bg-autumn" col="bg-[#666666]/60" />
-	</body>
-    )
+	return (
+		<div id="home" className='bg-slate-400 overflow-visible'>
+			<h1 className="text-white text-2xl text-center pt-6">Welcome to {year}</h1>
+			<Grid x={0} y={3} pic="bg-snow" col="bg-[#666666]/60" />
+			<Grid x={4} y={7} pic="bg-summer" col="bg-[#666666]/60" />
+			<Grid x={8} y={11} pic="bg-autumn" col="bg-[#666666]/60" />
+		</div>
+	)
 };
 
-function trigger(event) {
-    let parent = event.currentTarget.parentElement.class
-    parent.appendChild(document.createElement('a'))
+function Fun({onClose}) {
+    //	const target = event.target.parentNode.className;
+    //   const parents = document.querySelectorAll(`.${target}`);
+    return (
+		<div className=" flex-col absolute  bg-slate-500 z-50">
+			<form className="flex-column">
+				<label className="block"> emoji
+					<input id="emoji"></input>
+				</label> name
+				<label className="block">
+					<input id="name"></input>
+				</label> description
+				<label className="block">
+					<input id="description"></input>
+				</label>
+			</form>
+			<div className="block">
+			        <button value="cancel" onClick={onClose} >Cancel</button>
+			        <button value="default" id="confirm" >Confirm</button>
+			</div>
+		</div >
+	)
+	const emoji = document.getElementById("emoji")
+    const name = document.getElementById("name")
+    const description = document.getElementById("description")
+    //parents.forEach(item => {
+    //	item.
+    //})
 }
+
+
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<Page />);
