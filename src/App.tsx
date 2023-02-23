@@ -109,42 +109,43 @@ function objMaker() {
 }
 objMaker()
 
-function TableDate(props: any) {
+function TableDate( props: any) {
 	const [showModal, setShowModal] = useState(false);
 	let uuid = props.uuid
 	let today = props.today
-    return (
-	<>
-		<td className={`border-t border-black  ${uuid} `}>
-			<button onClick={() => setShowModal(true)} key={`gen-${uuid}`} className={`px-2 border-black border rounded-full m-2 w-min btn-${uuid}`}>{today}</button>
-		</td>
-	    {showModal && (
-			<Fun onClose={() => setShowModal(false)} />
-		)
-	    }
-	</>
-    )
+	const modalParent = document.getElementById(`gen-${uuid}`)
+	return (
+		<>
+			<td id={`gen-${uuid}`} className={`overflow-visible border-t border-black  ${uuid} `}>
+				<button onClick={() => setShowModal(true)} className={`px-2 border-black border rounded-full m-2 w-min btn-${uuid}`}>{today}</button>
+			</td>
+			{showModal && createPortal(
+				<Fun onClose={() => setShowModal(false)} />,
+				modalParent
+			)}
+		</>
+	)
 }
 
 function TableDateCopy(props: any) {
 	const [showModal, setShowModal] = useState(false);
 	let uuid = props.uuid
 	let today = props.today
+	const modalParent = document.getElementById(`carbonCopy-${uuid}`) 
 	return (
 		<>
-			<td className={`border-t border-black  ${uuid} `}>
-				<button onClick={() => setShowModal(true)} key={`carbonCopy-${uuid}`} className={`px-2 border-black border rounded-full m-2 w-min btn-${uuid}`}>{today}</button>
+			<td id={`carbonCopy-${uuid}`} className={`overflow-visible border-t border-black  ${uuid} `}>
+				<button onClick={() => setShowModal(true)} className={`px-2 border-black border rounded-full m-2 w-min btn-${uuid}`}>{today}</button>
 			</td>
-			{showModal &&(
-				<Fun onClose={() => setShowModal(false)} />
-			)
-	    }
-	</>
+			{showModal && createPortal(
+				<Fun onClose={() => setShowModal(false)} />,
+				modalParent
+			)}
+		</>
 	)
 }
 
-function Grid(props: any) {
-    
+function Grid(props: any) {  
 	let x = props.x
     let y = props.y
     let pic = props.pic
@@ -220,7 +221,7 @@ function Fun({onClose}) {
     //   const parents = document.querySelectorAll(`.${target}`);
     return (
 		<div className=" flex-col absolute  bg-slate-500 z-50">
-			<form className="flex-column">
+			<form className="flex-col">
 				<label className="block"> emoji
 					<input id="emoji"></input>
 				</label> name
@@ -237,9 +238,9 @@ function Fun({onClose}) {
 			</div>
 		</div >
 	)
-	const emoji = document.getElementById("emoji")
-    const name = document.getElementById("name")
-    const description = document.getElementById("description")
+//	const emoji = document.getElementById("emoji")
+//    const name = document.getElementById("name")
+//    const description = document.getElementById("description")
     //parents.forEach(item => {
     //	item.
     //})
