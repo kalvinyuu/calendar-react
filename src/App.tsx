@@ -133,7 +133,7 @@ function TableDateCopy(props: any) {
 	return (
 		<>
 			<td className={`border-t border-black  ${uuid} `}>
-				<button onClick={() => setShowModal(true)} key={`carbonCopy-${uuid}`} className={`px-2 border-black border rounded-full m-2 xgw-min btn-${uuid}`}>{today}</button>
+				<button onClick={() => setShowModal(true)} key={`carbonCopy-${uuid}`} className={`px-2 border-black border rounded-full m-2 w-min btn-${uuid}`}>{today}</button>
 			</td>
 			{showModal &&(
 				<Fun onClose={() => setShowModal(false)} />
