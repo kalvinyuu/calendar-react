@@ -1,7 +1,5 @@
-import './App.css';
-import * as React from "react";
-import * as ReactDOM from "react-dom/client";
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 const months = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 // const week_days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -100,38 +98,81 @@ function TableDate(props) {
     const [showModal, setShowModal] = useState(false);
     let uuid = props.uuid;
     let today = props.today;
+    let dist = props.dist;
+    const modalParent = document.getElementById(`${dist}-${uuid}`);
+    const mod = document.getElementById("modal");
+    const ref = useRef();
+    useOnClickOutside(ref, () => setShowModal(false));
     return (<>
-		<td className={`border-t border-black  ${uuid} `}>
-			<button onClick={() => setShowModal(true)} key={`gen-${uuid}`} className={`px-2 border-black border rounded-full m-2 w-min btn-${uuid}`}>{today}</button>
-		</td>
-	    {showModal && (<Fun onClose={() => setShowModal(false)}/>)}
+	    <td id={`${dist}-${uuid}`} className={`overflow-visible border-t border-black  ${uuid} `}>
+		<button onClick={() => setShowModal(true)} className={`px-2 border-black border rounded-full m-2 w-min btn-${uuid}`}>{today}</button>
+	    </td>
+	    {showModal && createPortal(<div ref={ref}>
+			<Fun abc={uuid} onClose={() => setShowModal(false)}/>
+		    </div>, modalParent)}
 	</>);
 }
-function TableDateCopy(props) {
-    const [showModal, setShowModal] = useState(false);
-    let uuid = props.uuid;
-    let today = props.today;
-    return (<>
-			<td className={`border-t border-black  ${uuid} `}>
-				<button onClick={() => setShowModal(true)} key={`carbonCopy-${uuid}`} className={`px-2 border-black border rounded-full m-2 w-min btn-${uuid}`}>{today}</button>
-			</td>
-			{showModal && (<Fun onClose={() => setShowModal(false)}/>)}
-	</>);
+//imported function from internetl
+function useOnClickOutside(ref, handler) {
+    useEffect(() => {
+        const listener = (event) => {
+            // Do nothing if clicking ref's element or descendent elements
+            if (!ref.current || ref.current.contains(event.target)) {
+                return;
+            }
+            handler(event);
+        };
+        document.addEventListener("mousedown", listener);
+        document.addEventListener("touchstart", listener);
+        return () => {
+            document.removeEventListener("mousedown", listener);
+            document.removeEventListener("touchstart", listener);
+        };
+    }, 
+    // Add ref and handler to effect dependencies
+    // It's worth noting that because the passed-in handler is a new ...
+    // ... function on every render that will cause this effect ...
+    // ... callback/cleanup to run every render. It's not a big deal ...
+    // ... but to optimize you can wrap handler in useCallback before ...
+    // ... passing it into this hook.
+    [ref, handler]);
+}
+function Fun({ abc, onClose, confirm }) {
+    //	const target = event.target.parentNode.className;
+    //   const parents = document.querySelectorAll(`.${target}`);
+    return (<div className="flex-col absolute bg-slate-500 p-6 rounded-md space-y-2 overflow-visible">
+		<p className="text-center">{abc}</p>
+		<form className="flex-col space-y-2">
+		    <input className="block" placeholder=" Symbol" id="emoji"></input>
+		    <input className="block" placeholder=" Event name" id="name"></input>
+		    <input className="block" placeholder=" Description" id="description"></input>
+		</form>
+		<div className="block space-x-4">
+		    <button className="bg-slate-100 py-1 px-2 rounded-lg" value="cancel" onClick={onClose}>Cancel</button>
+		    <button className="bg-slate-100 py-1 px-2 rounded-lg" value="default" id="confirm">Confirm</button>
+		</div>
+	    </div>);
+    //	const emoji = document.getElementById("emoji")
+    //    const name = document.getElementById("name")
+    //    const description = document.getElementById("description")
+    //parents.forEach(item => {
+    //	item.
+    //})
 }
 function Grid(props) {
     let x = props.x;
     let y = props.y;
     let pic = props.pic;
     let col = props.col;
-    return (<div className={`grid grid-cols-2 place-content-evenly bg-fixed gap-y-16 bg-center bg-no-repeat w-screen h-screen place-items-center sticky px-4 gap-x-4 ${pic} bg-cover bg-fixed`}>
-	{months.map((month, i) => {
+    return (<div className={`grid grid-cols-2 place-content-evenly bg-fixed gap-y-16 bg-center bg-no-repeat w-screen h-screen place-items-center static px-4 gap-x-4 ${pic} bg-cover overflow-visible`}>
+	    {months.map((month, i) => {
             if (i >= x && i <= y) {
                 return <div className={`inline-block w-full mx-8 border border-black ${col}`}>
-		<p className="block text-center py-1.5 ">{month}</p>
-		<table className="table-fixed w-full wrapper">
-		<thead>
-		<tr>
-		{weekDays.map((day) => {
+			<p className="block text-center py-1.5 ">{month}</p>
+			<table className="table-fixed w-full wrapper">
+			    <thead>
+				<tr>
+				    {weekDays.map((day) => {
                         if (day === "Sunday" || day === "Saturday") {
                             return <th className="text-indigo-900 border-y-2 border-black px-2 py-1.5 font-mono font-medium">{day}</th>;
                         }
@@ -139,32 +180,32 @@ function Grid(props) {
                             return <th className="text-slate-900 border-y-2 border-black px-2 py-1.5 font-mono font-medium">{day}</th>;
                         }
                     })}
-		</tr>
-		</thead>
-		<tbody>
-		{monCal[i].map((week, j) => (<tr>
-		    {week.map((theDay, k) => {
+				</tr>
+			    </thead>
+			    <tbody>
+				{monCal[i].map((week, j) => (<tr>
+					{week.map((theDay, k) => {
                             let p = (j * 7) + (k + 1);
                             if (theDay > 13 && theDay > p && i === 0) {
-                                return (<TableDateCopy uuid={`${theDay}-${months[11]}-${year - 1}`} today={theDay}/>);
+                                return (<TableDate dist='cc' uuid={`${theDay}-${months[11]}-${year - 1}`} today={theDay}/>);
                             }
                             else if (theDay > 13 && theDay > p) {
-                                return (<TableDateCopy uuid={`${theDay}-${months[i - 1]}-${year}`} today={theDay}/>);
+                                return (<TableDate dist='cc' uuid={`${theDay}-${months[i - 1]}-${year}`} today={theDay}/>);
                             }
                             else if (theDay < 14 && p > monLen[i] && i === 11) {
-                                return (<TableDateCopy uuid={`${theDay}-${months[0]}-${year + 1}`} today={theDay}/>);
+                                return (<TableDate dist='cc' uuid={`${theDay}-${months[0]}-${year + 1}`} today={theDay}/>);
                             }
                             else if (theDay < 14 && p > monLen[i]) {
-                                return (<TableDateCopy uuid={`${theDay}-${months[i + 1]}-${year}`} today={theDay}/>);
+                                return (<TableDate dist='cc' uuid={`${theDay}-${months[i + 1]}-${year}`} today={theDay}/>);
                             }
                             else {
-                                return (<TableDate uuid={`${theDay}-${month}-${year}`} today={theDay}/>);
+                                return (<TableDate dist='gen' uuid={`${theDay}-${month}-${year}`} today={theDay}/>);
                             }
                         })}
-		    </tr>))}
-		</tbody>
-		</table>
-		</div>;
+				    </tr>))}
+			    </tbody>
+			</table>
+		    </div>;
             }
         })}
 	</div>);
@@ -172,40 +213,13 @@ function Grid(props) {
 ;
 function Page() {
     return (<div id="home" className='bg-slate-400 overflow-visible'>
-			<h1 className="text-white text-2xl text-center pt-6">Welcome to {year}</h1>
-			<Grid x={0} y={3} pic="bg-snow" col="bg-[#666666]/60"/>
-			<Grid x={4} y={7} pic="bg-summer" col="bg-[#666666]/60"/>
-			<Grid x={8} y={11} pic="bg-autumn" col="bg-[#666666]/60"/>
-		</div>);
+	    <h1 className="text-white text-2xl text-center pt-6">Welcome to {year}</h1>
+	    <Grid x={0} y={3} pic="bg-snow" col="bg-[#666666]/60"/>
+	    <Grid x={4} y={7} pic="bg-summer" col="bg-[#666666]/60"/>
+	    <Grid x={8} y={11} pic="bg-autumn" col="bg-[#666666]/60"/>
+	</div>);
 }
 ;
-function Fun({ onClose }) {
-    //	const target = event.target.parentNode.className;
-    //   const parents = document.querySelectorAll(`.${target}`);
-    return (<div className=" flex-col absolute  bg-slate-500 z-50">
-			<form className="flex-column">
-				<label className="block"> emoji
-					<input id="emoji"></input>
-				</label> name
-				<label className="block">
-					<input id="name"></input>
-				</label> description
-				<label className="block">
-					<input id="description"></input>
-				</label>
-			</form>
-			<div className="block">
-			        <button value="cancel" onClick={onClose}>Cancel</button>
-			        <button value="default" id="confirm">Confirm</button>
-			</div>
-		</div>);
-    const emoji = document.getElementById("emoji");
-    const name = document.getElementById("name");
-    const description = document.getElementById("description");
-    //parents.forEach(item => {
-    //	item.
-    //})
-}
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<Page />);
 export default Page;

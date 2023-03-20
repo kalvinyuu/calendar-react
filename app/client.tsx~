@@ -1,0 +1,52 @@
+'use client'
+import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
+
+function TableDate(props:any) {
+    const [showModal, setShowModal] = useState(false);
+    let uuid = props.uuid;
+    let today = props.today;
+    let dist = props.dist;
+    const modalParent = document.getElementById(`${dist}-${uuid}`);
+    //const mod = document.getElementById("modal");
+    const ref = useRef();
+    useOnClickOutside(ref, () => setShowModal(false));
+    
+    return (<>
+	<td id={`${dist}-${uuid}`} className={`overflow-visible border-t border-black  ${uuid} `}>
+	    <button onClick={() => setShowModal(true)} className={`px-2 border-black border rounded-full m-2 w-min btn-${uuid}`}>{today}</button>
+	</td>
+	{showModal && createPortal(
+	    <div ref={ref}>
+		<Modal abc={uuid} onClose={() => setShowModal(false)}/>
+	    </div>, modalParent)}
+    </>);
+}
+
+//imported function from stackOverflow
+function useOnClickOutside(reff, handler) {
+	useEffect (
+		() => {
+			const listener = (event) => {
+				// Do nothing if clicking ref's element or descendent elements
+				if (!reff.current || reff.current.contains(event.target)) {
+					return;
+				}
+				handler(event);
+			};
+			document.addEventListener("mousedown", listener);
+			document.addEventListener("touchstart", listener);
+			return () => {
+				document.removeEventListener("mousedown", listener);
+				document.removeEventListener("touchstart", listener);
+			};
+		},
+		// Add ref and handler to effect dependencies
+		// It's worth noting that because the passed-in handler is a new ...
+		// ... function on every render that will cause this effect ...
+		// ... callback/cleanup to run every render. It's not a big deal ...
+		// ... but to optimize you can wrap handler in useCallback before ...
+		// ... passing it into this hook.
+		[reff, handler]
+	);
+}

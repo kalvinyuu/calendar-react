@@ -1,9 +1,0 @@
-{ 
-    "compilerOptions":{
-	
-	"target": "esnext",
-	"watch": true,
-	"lib": ["ESNext","DOM"],
-	"jsx": "react",
-   }
-}

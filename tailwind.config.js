@@ -1,16 +1,18 @@
 /** @type {import('tailwindcss'.Config} */
 module.exports = {
     content: [
-	"./src/**/*.{js,jsx,ts,tsx}"
-  ],
-  theme: {
-      extend: {
-	  backgroundImage: theme => ({
-	      'snow': "url('images/snow.jpeg')",
-	      'summer': "url('images/summer.jpeg')",
-	      'autumn': "url('images/autumn.jpeg')",
-          })
-      },
-  },
-  plugins: [],
+	"./app/**/*.{js,ts,jsx,tsx}",
+	"./pages/**/*.{js,ts,jsx,tsx}",
+	"./components/**/*.{js,ts,jsx,tsx}",
+    ],
+    theme: {
+	extend: {
+	    backgroundImage: theme => ({
+		'snow': "url('../public/images/snow.jpeg')",
+		'summer': "url('../public/images/summer.jpeg')",
+		'autumn': "url('../public/images/autumn.jpeg')",
+            })
+	},
+    },
+    plugins: [],
 }
