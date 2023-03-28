@@ -1,9 +1,5 @@
 //'use client'
-//import { useState, useEffect, useRef } from 'react';
-//import { createPortal } from 'react-dom';
 import TableDate from './client.tsx'
-
-
 const months = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 // const week_days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -93,159 +89,93 @@ function arrSplit() {
 }
 arrSplit()
 
-// function objMaker(x, y, z) {
-//  y.forEach((e, i) => {
-//	 x[e] = z[i];
-//   });
-//} 
-
-//objMaker(yearObj, month, monCal)
-
-
 function objMaker() {
     months.forEach((e, i) => {
         yearObj[e] = monCal[i]
     })
 }
 objMaker()
-/*
-function TableDate(props:any) {
-    const [showModal, setShowModal] = useState(false);
-    let uuid = props.uuid;
-    let today = props.today;
-    let dist = props.dist;
-    const modalParent = document.getElementById(`${dist}-${uuid}`);
-    //const mod = document.getElementById("modal");
-    const ref = useRef();
-    useOnClickOutside(ref, () => setShowModal(false));
-    
-    return (<>
-	<td id={`${dist}-${uuid}`} className={`overflow-visible border-t border-black  ${uuid} `}>
-	    <button onClick={() => setShowModal(true)} className={`px-2 border-black border rounded-full m-2 w-min btn-${uuid}`}>{today}</button>
-	</td>
-	{showModal && createPortal(
-	    <div ref={ref}>
-		<Modal abc={uuid} onClose={() => setShowModal(false)}/>
-	    </div>, modalParent)}
-    </>);
-}
-
-//imported function from stackOverflow
-function useOnClickOutside(reff, handler) {
-	useEffect (
-		() => {
-			const listener = (event) => {
-				// Do nothing if clicking ref's element or descendent elements
-				if (!reff.current || reff.current.contains(event.target)) {
-					return;
-				}
-				handler(event);
-			};
-			document.addEventListener("mousedown", listener);
-			document.addEventListener("touchstart", listener);
-			return () => {
-				document.removeEventListener("mousedown", listener);
-				document.removeEventListener("touchstart", listener);
-			};
-		},
-		// Add ref and handler to effect dependencies
-		// It's worth noting that because the passed-in handler is a new ...
-		// ... function on every render that will cause this effect ...
-		// ... callback/cleanup to run every render. It's not a big deal ...
-		// ... but to optimize you can wrap handler in useCallback before ...
-		// ... passing it into this hook.
-		[reff, handler]
-	);
-}
- */
 
 function Grid(props: any) {
-	let x = props.x
-	let y = props.y
-	let pic = props.pic
-	let col = props.col
-	return (
-		<div className={`grid grid-cols-2 place-content-evenly bg-fixed gap-y-16 bg-center bg-no-repeat w-screen h-screen place-items-center static px-4 gap-x-4 ${pic} bg-cover overflow-visible`
-		} >
-			{
-				months.map((month, i) => {
-					if (i >= x && i <= y) {
-						return <div className={`inline-block w-full mx-8 border border-black ${col}`} >
-							<p className="block text-center py-1.5 " > {month} </p>
-							< table className="table-fixed w-full wrapper" >
-								<thead>
-									<tr>
-										{
-											weekDays.map((day) => {
-												if (day === "Sunday" || day === "Saturday") {
-													return <th className="text-indigo-900 border-y-2 border-black px-2 py-1.5 font-mono font-medium" > {day} </th>
-												}
-												else {
-													return <th className="text-slate-900 border-y-2 border-black px-2 py-1.5 font-mono font-medium" > {day} </th>
-												}
-											})
-										}
-									</tr>
-								</thead>
-								<tbody>
-									{
-										monCal[i].map((week: number[], j) => (
-											<tr>
-												{
-													week.map((theDay, k) => {
-														let p = (j * 7) + (k + 1)
-														if (theDay > 13 && theDay > p && i === 0) {
-															return (
-																<TableDate dist='cc' uuid={`${theDay}-${months[11]}-${year - 1}`} today={theDay} />
-															)
-														}
-														else if (theDay > 13 && theDay > p) {
-															return (
-																<TableDate dist='cc' uuid={`${theDay}-${months[i - 1]}-${year}`} today={theDay} />
-															)
-														}
-														else if (theDay < 14 && p > monLen[i] && i === 11) {
-															return (
-																<TableDate dist='cc' uuid={`${theDay}-${months[0]}-${year + 1}`} today={theDay} />
-															)
-														}
-														else if (theDay < 14 && p > monLen[i]) {
-															return (
-																<TableDate dist='cc' uuid={`${theDay}-${months[i + 1]}-${year}`} today={theDay} />
-															)
-														}
-														else {
-															return (
-																<TableDate dist='gen' uuid={`${theDay}-${month}-${year}`} today={theDay} />
-															)
-														}
-													})}
-											</tr>
-										))}
-								</tbody>
+    let x = props.x
+    let y = props.y
+    let pic = props.pic
+    let col = props.col
+    return (
+	<div className={`grid grid-cols-2 place-content-evenly bg-fixed gap-y-16 bg-center bg-no-repeat w-screen h-screen place-items-center static px-4 gap-x-4 ${pic} bg-cover overflow-visible`
+	} >
+	    {
+		months.map((month, i) => {
+		    if (i >= x && i <= y) {
+			return <div className={`inline-block w-full mx-8 border border-black ${col}`} >
+			    <p className="block text-center py-1.5 " > {month} </p>
+			    < table className="table-fixed w-full wrapper" >
+			    <thead>
+				<tr>
+				    {
+					weekDays.map((day) => {
+					    if (day === "Sunday" || day === "Saturday") {
+						return <th className="text-indigo-900 border-y-2 border-black px-2 py-1.5 font-mono font-medium" > {day} </th>
+					    }
+					    else {
+						return <th className="text-slate-900 border-y-2 border-black px-2 py-1.5 font-mono font-medium" > {day} </th>
+					    }
+					})
+				    }
+				</tr>
+			    </thead>
+			    <tbody>
+				{
+				    monCal[i].map((week: number[], j) => (
+					<tr>
+					    {
+						week.map((theDay, k) => {
+						    let p = (j * 7) + (k + 1)
+						    if (theDay > 13 && theDay > p && i === 0) {
+							return (
+							    <TableDate dist='cc' uuid={`${theDay}-${months[11]}-${year - 1}`} today={theDay} />
+							)
+						    }
+						    else if (theDay > 13 && theDay > p) {
+							return (
+							    <TableDate dist='cc' uuid={`${theDay}-${months[i - 1]}-${year}`} today={theDay} />
+							)
+						    }
+						    else if (theDay < 14 && p > monLen[i] && i === 11) {
+							return (
+							    <TableDate dist='cc' uuid={`${theDay}-${months[0]}-${year + 1}`} today={theDay} />
+							)
+						    }
+						    else if (theDay < 14 && p > monLen[i]) {
+							return (
+							    <TableDate dist='cc' uuid={`${theDay}-${months[i + 1]}-${year}`} today={theDay} />
+							)
+						    }
+						    else {
+							return (
+							    <TableDate dist='gen' uuid={`${theDay}-${month}-${year}`} today={theDay} />
+							)
+						    }
+						})}
+					</tr>
+				    ))}
+			    </tbody>
 							</table>
-						</div>
-					}
-				})}
-		</div>
-	)
+			</div>
+		    }
+		})}
+	</div>
+    )
 };
 function Page() {
     return (
         <div id= "home" className = 'bg-slate-400 overflow-visible' >
             <h1 className="text-white text-2xl text-center pt-6" > Welcome to { year } </h1>
-            <Grid x = { 0} y = { 3} pic = "bg-snow" col = "bg-[#666666]/60" />
-            <Grid x={ 4 } y = { 7} pic = "bg-summer" col = "bg-[#666666]/60" />
-            <Grid x={ 8 } y = { 11} pic = "bg-autumn" col = "bg-[#666666]/60" />
+            <Grid x = {0} y = {3} pic = "bg-snow" col = "bg-[#666666]/60" />
+            <Grid x={4 } y = {7} pic = "bg-summer" col = "bg-[#666666]/60" />
+            <Grid x={8 } y = {11} pic = "bg-autumn" col = "bg-[#666666]/60" />
         </div>
     )
 };
-
-
-
-
-
-//const root = ReactDOM.createRoot(document.getElementById("root"));
-//root.render(<Page />);
 
 export default Page
