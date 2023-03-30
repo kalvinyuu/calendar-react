@@ -7,24 +7,22 @@ const EventDispatchContext = createContext(null)
 let nextId = 0
 const SetEditContext = createContext(null)
 const EditContext = createContext(null)
-//let emoji = document.getElementById("emoji") as HTMLInputElement;
-//let name = document.getElementById("name") as HTMLInputElement;
-//let description = document.getElementById("description") as HTMLInputElement;
 
 export default function TableDate(props: any) {//App.js add initialEvents as local storage
     const [createEvents, showEvents] = useState(false)
     const [showModal, setShowModal] = useState(false);
-    let uuid = props.uuid;
-    let today = props.today;
-    let dist = props.dist;
-    const modalParent = document.getElementById(`${dist}-${uuid}`);
-    let altModalParent 
-    const mod = document.getElementById("modal");
+    const [isEditing, setEditing] = useState(false);
     const ref = useRef();
     useOnClickOutside(ref, () => setShowModal(false));
+	let uuid = props.uuid;
+	let today = props.today;
+	let dist = props.dist;
+	const modalParent = document.getElementById(`${dist}-${uuid}`);
+	let altModalParent: HTMLElement
 
-    function opositer(){
-	let altDist 
+
+    function opositer() {
+	let altDist :string
 	if(dist === 'gen') {
 	    altDist = 'cc'
 	}
@@ -34,9 +32,6 @@ export default function TableDate(props: any) {//App.js add initialEvents as loc
 	    altModalParent = document.getElementById(`${altDist}-${uuid}`);
     }
 	opositer()
-	console.log(altModalParent)
-    const [isEditing, setEditing] = useState(false);
-    let isNotEditing = !isEditing
     return (<SetEditContext.Provider value={setEditing}>
 	<EditContext.Provider value={isEditing}>
 	<EventsProvider>
@@ -62,11 +57,10 @@ export default function TableDate(props: any) {//App.js add initialEvents as loc
 	)}
 	</EventsProvider>
 	</EditContext.Provider>
-    </SetEditContext.Provider>)
-    ;}
+    </SetEditContext.Provider>)};
 
 //imported function from stackOverflow
-function useOnClickOutside(ref, handler) {
+function useOnClickOutside(ref: React, handler) {
     useEffect (
 	() => {
 	    const listener = (event) => {
@@ -202,7 +196,7 @@ function Event({event, emoji, name, desc}) {
     //const [isEditing, setEditing] = useState(false);
     const dispatch = useEventsDispatch();
     let EventContent;
-    if (edit == true) { //edit
+    if (edit) { //edit
 	EventContent = (
 	    <>
 		<input value={emoji} onChange={e => {
