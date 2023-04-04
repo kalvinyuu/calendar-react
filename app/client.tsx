@@ -5,9 +5,6 @@ let altModalParent: HTMLElement
 const EventContext = createContext(null)
 const EventDispatchContext = createContext(null)
 let nextId = 0
-//let emoji = document.getElementById("emoji") as HTMLInputElement;
-//let name = document.getElementById("name") as HTMLInputElement;
-//let description = document.getElementById("description") as HTMLInputElement;
 
 export default function TableDate(props: any) {//App.js add initialEvents as local storage
     const [createEvents, showEvents] = useState(false)
@@ -22,25 +19,16 @@ export default function TableDate(props: any) {//App.js add initialEvents as loc
     return (<EventsProvider>
 	<td id={`${dist}-${uuid}`} className={`overflow-visible border-t border-black  ${uuid} `}>
 	<button onClick={() => setShowModal(true)} className={`px-2 border-black border rounded-full m-2 w-min btn-${uuid}`}>{today}</button>
-	{createEvents && createPortal (
-	    <>
-		<EventComp/>			
-	    </>
-	    , modalParent
-	)}
-	{ altModalParent !== null ? createEvents && createPortal (
-		<>
-		    <EventComp/>
-		</>
-		, altModalParent
-	) : null}
-	</td>
-	{showModal && createPortal(
-	    <div ref={ref}>
-		<Modal abc={uuid} onClose={() => setShowModal(false)} showList={() => showEvents(true)} dist={dist} />
-	    </div>, modalParent
-	)}
-	</EventsProvider>)};
+		<EventComp state={createEvents} destination={modalParent}/>			
+	{ altModalParent !== null ? <EventComp state={createEvents} destination={altModalParent} />: null }
+		</td>
+		{showModal && createPortal(
+			<div ref={ref}>
+				<Modal abc={uuid} onClose={() => setShowModal(false)} showList={() => showEvents(true)} dist={dist} />
+			</div>, modalParent
+		)}
+	</EventsProvider>)
+};
 //imported function from stackOverflow
 function useOnClickOutside(ref, handler) {
     useEffect (
@@ -69,13 +57,14 @@ function useOnClickOutside(ref, handler) {
     );
 }
 
-function Modal({abc, onClose, showList, dist}) { //AddList.js
-    const [emoji, setEmoji] = useState('')
-    const [name, setName] = useState('')
-    const [desc, setDesc] = useState('')
-    const dispatch = useEventsDispatch()
-        function opositer() {
-	let altDist:string 
+function Modal({ abc, onClose, showList, dist }) { //AddList.js
+	const [emoji, setEmoji] = useState('')
+	const [name, setName] = useState('')
+	const [desc, setDesc] = useState('')
+	let alt: string
+	let altDist: string
+	const dispatch = useEventsDispatch()
+	function opositer() {
 	if(dist === 'gen') {
 	    altDist = 'cc'
 	}
@@ -83,60 +72,58 @@ function Modal({abc, onClose, showList, dist}) { //AddList.js
 	    altDist ='gen'
 	}
 	    altModalParent = document.getElementById(`${altDist}-${abc}`);
+		altModalParent === null ? alt = null : alt = `${altDist}-${abc}`
 	}
-    //	const target = event.target.parentNode.className;
-    //   const parents = document.querySelectorAll(`.${target}`);
-    function submit() {
+	function submit() {
 	setDesc('');
 	setEmoji('');
 	setName('');
 	dispatch({
-	    type: 'added',
-	    id: nextId++,
-	    emoji: emoji,
-	    name: name,
-	    desc: desc,
+		type: 'added',
+		id: nextId++,
+		emoji: emoji,
+		name: name,
+		desc: desc,
+		destination: `${dist}-${abc}`,
+		altDestination: `${alt}`
 	})
-    }	
-    return (
-	<div className="flex-col absolute bg-slate-500 p-6 rounded-md space-y-2 overflow-visible">
-	    <p className="text-center" > {abc} </p>
-	    <div className="flex-col space-y-2">
-		<input className="block" placeholder=" Symbol" id="emoji" value={emoji}
-		       onChange={e => setEmoji(e.target.value)}></input>
-		<input className="block" placeholder=" Event name" id="name" value={name} onChange={e => setName(e.target.value)}></input>
-		<input className="block" placeholder=" Description" id="description" value={desc} onChange={e => setDesc(e.target.value)}></input>
-		<div className="block space-x-4" >
-		    <button className="bg-slate-100 py-1 px-2 rounded-lg" value="cancel" onClick={onClose} > Cancel </button>
-		    <button className="bg-slate-100 py-1 px-2 rounded-lg" value="default" onClick={() => {opositer(); showList(); submit();}}> Confirm </button>
+	}
+	return (
+		<div className="flex-col absolute bg-slate-500 p-6 rounded-md space-y-2 overflow-visible">
+			<p className="text-center" > {abc} </p>
+			<div className="flex-col space-y-2">
+				<input className="block" placeholder=" Symbol" id="emoji" value={emoji}
+					onChange={e => setEmoji(e.target.value)}></input>
+				<input className="block" placeholder=" Event name" id="name" value={name} onChange={e => setName(e.target.value)}></input>
+				<input className="block" placeholder=" Description" id="description" value={desc} onChange={e => setDesc(e.target.value)}></input>
+				<div className="block space-x-4" >
+					<button className="bg-slate-100 py-1 px-2 rounded-lg" value="cancel" onClick={onClose} > Cancel </button>
+					<button className="bg-slate-100 py-1 px-2 rounded-lg" value="default" onClick={() => { opositer(); showList(); submit(); }}> Confirm </button>
+				</div>
+			</div>
 		</div>
-	    </div>
-	</div>
-	
-    )
+
+	)
 }
 
-function EventsProvider({children}) {
-    const [events, dispatch] = useReducer (
-	eventReducer,
-	initialEvents
-    );
-    //const emoji = events.emoji
-    //const name = events.name
-    //const desc = events.name
-    return (
-	<EventContext.Provider value={events}>
-	    <EventDispatchContext.Provider value={dispatch}>
-		{children}
-	    </EventDispatchContext.Provider>
-	</EventContext.Provider>
-    )
+function EventsProvider({ children }) {
+	const [events, dispatch] = useReducer(
+		eventReducer,
+		initialEvents
+	);
+	return (
+		<EventContext.Provider value={events}>
+			<EventDispatchContext.Provider value={dispatch}>
+				{children}
+			</EventDispatchContext.Provider>
+		</EventContext.Provider>
+	)
 }
 function useEvents() {
-    return useContext(EventContext)
+	return useContext(EventContext)
 }
 function useEventsDispatch() {
-    return useContext(EventDispatchContext)
+	return useContext(EventDispatchContext)
 }
 
 function eventReducer(events, action) {
@@ -147,6 +134,8 @@ function eventReducer(events, action) {
 		emoji: action.emoji,
 		name: action.name,
 		desc: action.desc,
+		destination: action.destination,
+		altDestination: action.altDestination
 	    }];
 	}
 	    
@@ -168,9 +157,10 @@ function eventReducer(events, action) {
     }
 }
 
-function EventComp() {
+function EventComp({state, destination}) {
     const events = useEvents();
     return (
+	state && createPortal (
 	<span>
 	{ events.map(event => (
 		<Event key={event.id}
@@ -178,8 +168,8 @@ function EventComp() {
 		name={event.name}
 		desc={event.desc}
 		event={event}/> ))}
-	</span>
-)}
+	</span> , destination
+))}
 
 function Event({event, emoji, name, desc}) {
     const [isEditing, setEditing] = useState(false);
