@@ -1,40 +1,25 @@
 'use client'
 import { useState, useEffect, useRef, useReducer, createContext, useContext } from 'react';
 import { createPortal } from 'react-dom';
-
+let altModalParent: HTMLElement
 const EventContext = createContext(null)
 const EventDispatchContext = createContext(null)
 let nextId = 0
-const SetEditContext = createContext(null)
-const EditContext = createContext(null)
+//let emoji = document.getElementById("emoji") as HTMLInputElement;
+//let name = document.getElementById("name") as HTMLInputElement;
+//let description = document.getElementById("description") as HTMLInputElement;
 
 export default function TableDate(props: any) {//App.js add initialEvents as local storage
     const [createEvents, showEvents] = useState(false)
     const [showModal, setShowModal] = useState(false);
-    const [isEditing, setEditing] = useState(false);
+    let uuid = props.uuid;
+    let today = props.today;
+    let dist = props.dist;
+    const modalParent = document.getElementById(`${dist}-${uuid}`);
+    const mod = document.getElementById("modal");
     const ref = useRef();
     useOnClickOutside(ref, () => setShowModal(false));
-	let uuid = props.uuid;
-	let today = props.today;
-	let dist = props.dist;
-	const modalParent = document.getElementById(`${dist}-${uuid}`);
-	let altModalParent: HTMLElement
-
-
-    function opositer() {
-	let altDist :string
-	if(dist === 'gen') {
-	    altDist = 'cc'
-	}
-	else {
-	    altDist ='gen'
-	}
-	    altModalParent = document.getElementById(`${altDist}-${uuid}`);
-    }
-	opositer()
-    return (<SetEditContext.Provider value={setEditing}>
-	<EditContext.Provider value={isEditing}>
-	<EventsProvider>
+    return (<EventsProvider>
 	<td id={`${dist}-${uuid}`} className={`overflow-visible border-t border-black  ${uuid} `}>
 	<button onClick={() => setShowModal(true)} className={`px-2 border-black border rounded-full m-2 w-min btn-${uuid}`}>{today}</button>
 	{createEvents && createPortal (
@@ -43,24 +28,21 @@ export default function TableDate(props: any) {//App.js add initialEvents as loc
 	    </>
 	    , modalParent
 	)}
-	{createEvents && createPortal (
+	{ altModalParent !== null ? createEvents && createPortal (
 		<>
 		    <EventComp/>
 		</>
-		,altModalParent
-	)}
+		, altModalParent
+	) : null}
 	</td>
 	{showModal && createPortal(
 	    <div ref={ref}>
-		<Modal abc={uuid} onClose={() => setShowModal(false)} showList={() => showEvents(true)} fun={opositer()} />
+		<Modal abc={uuid} onClose={() => setShowModal(false)} showList={() => showEvents(true)} dist={dist} />
 	    </div>, modalParent
 	)}
-	</EventsProvider>
-	</EditContext.Provider>
-    </SetEditContext.Provider>)};
-
+	</EventsProvider>)};
 //imported function from stackOverflow
-function useOnClickOutside(ref: React, handler) {
+function useOnClickOutside(ref, handler) {
     useEffect (
 	() => {
 	    const listener = (event) => {
@@ -87,15 +69,24 @@ function useOnClickOutside(ref: React, handler) {
     );
 }
 
-function Modal({abc, onClose, showList, fun}) { //AddList.js
+function Modal({abc, onClose, showList, dist}) { //AddList.js
     const [emoji, setEmoji] = useState('')
     const [name, setName] = useState('')
     const [desc, setDesc] = useState('')
     const dispatch = useEventsDispatch()
+        function opositer() {
+	let altDist:string 
+	if(dist === 'gen') {
+	    altDist = 'cc'
+	}
+	else {
+	    altDist ='gen'
+	}
+	    altModalParent = document.getElementById(`${altDist}-${abc}`);
+	}
     //	const target = event.target.parentNode.className;
     //   const parents = document.querySelectorAll(`.${target}`);
     function submit() {
-	fun
 	setDesc('');
 	setEmoji('');
 	setName('');
@@ -117,7 +108,7 @@ function Modal({abc, onClose, showList, fun}) { //AddList.js
 		<input className="block" placeholder=" Description" id="description" value={desc} onChange={e => setDesc(e.target.value)}></input>
 		<div className="block space-x-4" >
 		    <button className="bg-slate-100 py-1 px-2 rounded-lg" value="cancel" onClick={onClose} > Cancel </button>
-		    <button className="bg-slate-100 py-1 px-2 rounded-lg" value="default" onClick={() => {showList(); submit();}}> Confirm </button>
+		    <button className="bg-slate-100 py-1 px-2 rounded-lg" value="default" onClick={() => {opositer(); showList(); submit();}}> Confirm </button>
 		</div>
 	    </div>
 	</div>
@@ -191,12 +182,10 @@ function EventComp() {
 )}
 
 function Event({event, emoji, name, desc}) {
-    const edit = useContext(EditContext)
-    let setEdit = useContext(SetEditContext)
-    //const [isEditing, setEditing] = useState(false);
+    const [isEditing, setEditing] = useState(false);
     const dispatch = useEventsDispatch();
     let EventContent;
-    if (edit) { //edit
+    if (isEditing) { //edit
 	EventContent = (
 	    <>
 		<input value={emoji} onChange={e => {
@@ -227,7 +216,7 @@ function Event({event, emoji, name, desc}) {
 			    }
 			})
 		    }}/>
-		    <button onClick={() => setEdit(false)}>save</button> 
+		    <button onClick={() => setEditing(false)}>save</button> 
 		    <button onClick={() => {
 			dispatch({
 			    type: 'deleted',
@@ -243,7 +232,7 @@ function Event({event, emoji, name, desc}) {
 		<div>
 		    <h3>{name}</h3>
 		    <p>{desc}</p>
-		    <button onClick={ () => setEdit(true) }>edit</button>
+		    <button onClick={ () => setEditing(true) }>edit</button>
 		    <button onClick={() => {
 			dispatch({
 			    type: 'deleted',
