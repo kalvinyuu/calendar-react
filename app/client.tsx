@@ -1,14 +1,14 @@
 'use client'
-import { useState, useEffect, useRef, useReducer, createContext, useContext } from 'react';
+import { useState, useEffect, useRef} from 'react';
 import { createPortal } from 'react-dom';
+import { useEventsDispatch} from './context.tsx'
+import EventComp from './eventList.tsx'
 let altModalParent: HTMLElement
-const EventContext = createContext(null)
-const EventDispatchContext = createContext(null)
 let nextId = 0
 
 export default function TableDate(props: any) {//App.js add initialEvents as local storage
-    const [createEvents, showEvents] = useState(false)
-    const [showModal, setShowModal] = useState(false);
+	const [createEvents, showEvents] = useState(false)
+	const [showModal, setShowModal] = useState(false);
     let uuid = props.uuid;
     let today = props.today;
     let dist = props.dist;
@@ -16,9 +16,9 @@ export default function TableDate(props: any) {//App.js add initialEvents as loc
     const mod = document.getElementById("modal");
     const ref = useRef();
     useOnClickOutside(ref, () => setShowModal(false));
-	return (<EventsProvider>
+	return (<>
 		<td id={`${dist}-${uuid}`} className={`overflow-visible border-t border-black  ${uuid} `}>
-			<button onClick={() => setShowModal(true)} className={`px-2 border-black border rounded-full m-2 w-min btn-${uuid}`}>{today}</button>
+	    <button onClick={() => setShowModal(true)} className={`px-2 border-black border rounded-full m-2 w-min btn-${uuid}`}>{today}</button>
 			<EventComp state={createEvents} destination={modalParent} />
 			{altModalParent !== null ? <EventComp state={createEvents} destination={altModalParent} /> : null}
 		</td>
@@ -27,8 +27,7 @@ export default function TableDate(props: any) {//App.js add initialEvents as loc
 				<Modal abc={uuid} onClose={() => setShowModal(false)} showList={() => showEvents(true)} dist={dist} />
 			</div>, modalParent
 		)}
-	</EventsProvider>)
-};
+	</>)};
 //imported function from stackOverflow
 function useOnClickOutside(ref, handler) {
     useEffect (
@@ -63,8 +62,7 @@ function Modal({ abc, onClose, showList, dist }) { //AddList.js
 	const [desc, setDesc] = useState('')
 	let alt: string
 	let altDist: string
-	const dispatch = useEventsDispatch()
-	//const events = useEvents()
+    const dispatch = useEventsDispatch()
 	function opositer() {
 		if (dist === 'gen') {
 	    altDist = 'cc'
@@ -88,7 +86,6 @@ function Modal({ abc, onClose, showList, dist }) { //AddList.js
 		destination: `${dist}-${abc}`,
 		altDestination: `${alt}`
 	})
-		//localStorage.setItem('my-events', JSON.stringify(events))
 	}
 	return (
 		<div className="flex-col absolute bg-slate-500 p-6 rounded-md space-y-2 overflow-visible">
@@ -100,7 +97,7 @@ function Modal({ abc, onClose, showList, dist }) { //AddList.js
 				<input className="block" placeholder=" Description" id="description" value={desc} onChange={e => setDesc(e.target.value)}></input>
 				<div className="block space-x-4" >
 					<button className="bg-slate-100 py-1 px-2 rounded-lg" value="cancel" onClick={onClose} > Cancel </button>
-					<button className="bg-slate-100 py-1 px-2 rounded-lg" value="default" onClick={() => { opositer(); showList(); submit();}}> Confirm </button>
+					<button className="bg-slate-100 py-1 px-2 rounded-lg" value="default" onClick={() => { opositer(); showList(); submit(); }}> Confirm </button>
 				</div>
 			</div>
 		</div>
@@ -108,166 +105,5 @@ function Modal({ abc, onClose, showList, dist }) { //AddList.js
 	)
 };
 
-const initialEvents = [] // localStorage.getItem('my-events')
-
-function EventsProvider({ children}) {
-	const [events, dispatch] = useReducer(
-		eventReducer,
-	    initialEvents
-	);    
-	return (
-		<EventContext.Provider value={events}>
-			<EventDispatchContext.Provider value={dispatch}>
-				{children}
-			</EventDispatchContext.Provider>
-		</EventContext.Provider>
-	)
-}
-
-function useEvents() {
-    return useContext(EventContext)
-}
-function useEventsDispatch() {
-	return useContext(EventDispatchContext)
-}
 
 
-function eventReducer(events, action) {
-    switch (action.type) {
-	case 'added': {
-	    return [...events, {
-		id: action.id,
-		emoji: action.emoji,
-		name: action.name,
-		desc: action.desc,
-		destination: action.destination,
-		altDestination: action.altDestination
-	    }];
-	}	    
-	case 'changed': {
-	    return events.map(ev => {
-		if (ev.id === action.event.id) {
-		    return action.event;
-		} else {
-		    return ev;
-		}
-	    });
-	}
-	case 'deleted': {
-	    return events.filter(ev => ev.id !== action.id);
-	}
-	case 'init_stored': {
-	    return action.events
-	    }
-	default: {
-	    throw Error('Unknown action: ' + action.type);
-	}
-    }
-}
-
-function EventComp({state, destination}) {
-    const events = useEvents();
-    return (
-	state && createPortal (
-	<span>
-	{ events.map(event => (
-		<Event key={event.id}
-		       emoji={event.emoji} 
-		name={event.name}
-		desc={event.desc}
-		event={event}/> ))}
-	</span> , destination
-))}
-
-function Event({event, emoji, name, desc}) {
-	const [isEditing, setEditing] = useState(false);
-    const dispatch = useEventsDispatch();
-	localStorageUploader()
-	let EventContent;
-	if (isEditing) { //edit
-		EventContent = (
-			<>
-				<input value={emoji} onChange={e => {
-					dispatch({
-						type: 'changed',
-						event: {
-							...event,
-							emoji: e.target.value
-						}
-					})
-				}} />
-				<div>
-					<input value={name} onChange={e => {
-						dispatch({
-							type: 'changed',
-							event: {
-								...event,
-								name: e.target.value
-							}
-						})
-					}} />
-					<input value={desc} onChange={e => {
-						dispatch({
-							type: 'changed',
-							event: {
-								...event,
-								desc: e.target.value
-							}
-						})
-					}} />
-					<button onClick={() => setEditing(false)}>save</button>
-					<button onClick={() => {
-						dispatch({
-							type: 'deleted',
-							id: event.id
-						});
-					}}>remove</button>
-				</div>
-			</>
-		)
-	}
-	else {
-	EventContent = (
-	    <a>{emoji}
-		<div>
-		    <h3>{name}</h3>
-		    <p>{desc}</p>
-		    <button onClick={ () => setEditing(true) }>edit</button>
-		    <button onClick={() => {
-			dispatch({
-			    type: 'deleted',
-			    id: event.id
-			});
-		    }}>remove</button>
-		</div>
-	    </a>
-    )}
-
-
-    return(
-	<>
-	    {EventContent}
-	</>
-    )
-}
-
-function localStorageLoader(){
-	let dispatch = useEventsDispatch()
-	useEffect(() => {
-	    if(JSON.parse(localStorage.getItem('my-events'))) {
-		dispatch({
-		    type: 'init_stored',
-		    events: JSON.parse(localStorage.getItem('my-events'))
-		    
-		});
-	    }
-	}, []);
-}
-function localStorageUploader() {
-	let events = useEvents()
-	useEffect(() => {
-		if (events !== initialEvents) {
-			localStorage.setItem('my-events', JSON.stringify(events))
-		}
-	}, [events])
-}

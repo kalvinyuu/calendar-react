@@ -1,0 +1,60 @@
+'use client'
+const EventContext = createContext(null)
+const EventDispatchContext = createContext(null)
+let nextId = 0
+const initialEvents = [] // localStorage.getItem('my-events')
+
+function EventsProvider({ children}) {
+	const [events, dispatch] = useReducer(
+		eventReducer,
+	    initialEvents
+	);    
+	return (
+		<EventContext.Provider value={events}>
+			<EventDispatchContext.Provider value={dispatch}>
+				{children}
+			</EventDispatchContext.Provider>
+		</EventContext.Provider>
+	)
+}
+
+function useEvents() {
+    return useContext(EventContext)
+}
+function useEventsDispatch() {
+	return useContext(EventDispatchContext)
+}
+
+
+function eventReducer(events, action) {
+    switch (action.type) {
+	case 'added': {
+	    return [...events, {
+		id: action.id,
+		emoji: action.emoji,
+		name: action.name,
+		desc: action.desc,
+		destination: action.destination,
+		altDestination: action.altDestination
+	    }];
+	}	    
+	case 'changed': {
+	    return events.map(ev => {
+		if (ev.id === action.event.id) {
+		    return action.event;
+		} else {
+		    return ev;
+		}
+	    });
+	}
+	case 'deleted': {
+	    return events.filter(ev => ev.id !== action.id);
+	}
+	case 'init_stored': {
+	    return action.events
+	    }
+	default: {
+	    throw Error('Unknown action: ' + action.type);
+	}
+    }
+}
