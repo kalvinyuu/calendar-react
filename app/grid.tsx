@@ -1,4 +1,4 @@
-'use client'
+'use client' 
 import {EventsProvider} from './context.tsx'
 import TableDate from './client.tsx'
 const months = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];

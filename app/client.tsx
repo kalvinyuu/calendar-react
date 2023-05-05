@@ -27,7 +27,7 @@ export default function TableDate(props: any) {//App.js add initialEvents as loc
 				<Modal abc={uuid} onClose={() => setShowModal(false)} showList={() => showEvents(true)} dist={dist} />
 			</div>, modalParent
 		)}
-	</>)};
+	</>)}; 
 //imported function from stackOverflow
 function useOnClickOutside(ref, handler) {
     useEffect (
