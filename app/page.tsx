@@ -1,10 +1,9 @@
+import TriGrid from "./grid.tsx";
 
-import TriGrid from './grid.tsx'
-
-export default function Page(){
-    return (
-	<div>
-	<TriGrid/>
-	</div>
-    )
+export default function Page() {
+  return (
+    <div>
+      <TriGrid />
+    </div>
+  );
 }

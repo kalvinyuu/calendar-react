@@ -1,9 +1,9 @@
-import './globals.css';
+import "./globals.css";
 
 export default function RootLayout({
-    // Layouts must accept a children prop.
-    // This will be populated with nested layouts or pages
-    children,
+  // Layouts must accept a children prop.
+  // This will be populated with nested layouts or pages
+  children,
 }: {
   children: React.ReactNode;
 }) {
@@ -15,6 +15,6 @@ export default function RootLayout({
 }
 
 export const metadata = {
-  title: 'Home',
-  description: 'Welcome to Next.js',
+  title: "Home",
+  description: "Welcome to Next.js",
 };
