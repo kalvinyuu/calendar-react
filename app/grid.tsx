@@ -1,5 +1,6 @@
 import { EventsProvider } from "./context.tsx";
 import TableDate from "./client.tsx";
+
 import Link from "next/link";
 const months = [
   "January",
@@ -113,11 +114,84 @@ function objMaker() {
 }
 objMaker();
 
-function Grid(props: any) {
-  let x = props.x;
-  let y = props.y;
-  let pic = props.pic;
-  let col = props.col;
+function Month({i, month}) {
+    return (
+	<table className="table-fixed w-full wrapper">
+	    <thead>
+		<tr>
+		    {weekDays.map((day) => {
+			if (day === "Sunday" || day === "Saturday") {
+			    return (
+				<th className="text-indigo-900 border-y-2 border-black px-2 py-1.5 font-mono font-medium mx-2">
+				    <span>{day[0]}</span><span className="collapse md:visible">{day.slice(1,3)}</span>
+				</th>
+			    );
+			} else {
+			    return (
+				<th className="text-slate-900 border-y-2 border-black px-2 py-1.5 font-mono font-medium mx-2">
+				    <span>{day[0]}</span><span className="collapse md:visible">{day.slice(1,3)}</span>
+				</th>
+			    );
+			}
+		    })}
+		</tr>
+	    </thead>
+	    <tbody>
+		{monCal[i].map((week: number[], j) => (
+		    <tr className="overflow-hidden leading-6 whitespace-nowrap">
+			{week.map((theDay, k) => {
+			    let p = j * 7 + (k + 1);
+			    if (theDay > 13 && theDay > p && i === 0) {
+				return (
+				    <TableDate
+					dist="cc"
+					uuid={`${theDay}-${months[11]}-${year - 1}`}
+					today={theDay}
+				    />
+				);
+			    } else if (theDay > 13 && theDay > p) {
+				return (
+				    <TableDate
+					dist="cc"
+					uuid={`${theDay}-${months[i - 1]}-${year}`}
+					today={theDay}
+				    />
+				);
+			    } else if (theDay < 14 && p > monLen[i] && i === 11) {
+				return (
+				    <TableDate
+					dist="cc"
+					uuid={`${theDay}-${months[0]}-${year + 1}`}
+					today={theDay}
+				    />
+				);
+			    } else if (theDay < 14 && p > monLen[i]) {
+				return (
+				    <TableDate
+					dist="cc"
+					uuid={`${theDay}-${months[i + 1]}-${year}`}
+					today={theDay}
+				    />
+				);
+			    } else {
+				return (
+				    <TableDate
+					dist="gen"
+					uuid={`${theDay}-${month}-${year}`}
+					today={theDay}
+				    />
+				);
+			    }
+			})}
+		    </tr>
+		))}
+	    </tbody>
+	</table>
+    )
+}
+
+
+function Grid({x, y, pic, col}) {
   return (
       <div
 	  className={` max-md:flex max-md:flex-col md:grid md:grid-cols-2 place-content-evenly bg-fixed gap-y-16 bg-center bg-no-repeat w-screen md:h-screen place-items-center px-4 gap-x-4 ${pic} bg-cover overflow-visible`}
@@ -129,77 +203,7 @@ function Grid(props: any) {
 			  className={`inline-block w-full mx-8 border border-black ${col}`}
 		      >
 			  <Link href="/month/"> <a className="block text-center py-1.5 "> {month}</a> </Link>
-			  <table className="table-fixed w-full wrapper">
-			      <thead>
-				  <tr>
-				      {weekDays.map((day) => {
-					  if (day === "Sunday" || day === "Saturday") {
-					      return (
-						  <th className="text-indigo-900 border-y-2 border-black px-2 py-1.5 font-mono font-medium mx-2">
-						      <span>{day[0]}</span><span className="collapse md:visible">{day.slice(1,3)}</span>
-						  </th>
-					      );
-					  } else {
-					      return (
-						  <th className="text-slate-900 border-y-2 border-black px-2 py-1.5 font-mono font-medium mx-2">
-						      <span>{day[0]}</span><span className="collapse md:visible">{day.slice(1,3)}</span>
-						  </th>
-					      );
-					  }
-				      })}
-				  </tr>
-			      </thead>
-			      <tbody>
-				  {monCal[i].map((week: number[], j) => (
-				      <tr className="overflow-hidden leading-6 whitespace-nowrap">
-					  {week.map((theDay, k) => {
-					      let p = j * 7 + (k + 1);
-					      if (theDay > 13 && theDay > p && i === 0) {
-						  return (
-						      <TableDate
-							  dist="cc"
-							  uuid={`${theDay}-${months[11]}-${year - 1}`}
-							  today={theDay}
-						      />
-						  );
-					      } else if (theDay > 13 && theDay > p) {
-						  return (
-						      <TableDate
-							  dist="cc"
-							  uuid={`${theDay}-${months[i - 1]}-${year}`}
-							  today={theDay}
-						      />
-						  );
-					      } else if (theDay < 14 && p > monLen[i] && i === 11) {
-						  return (
-						      <TableDate
-							  dist="cc"
-							  uuid={`${theDay}-${months[0]}-${year + 1}`}
-							  today={theDay}
-						      />
-						  );
-					      } else if (theDay < 14 && p > monLen[i]) {
-						  return (
-						      <TableDate
-							  dist="cc"
-							  uuid={`${theDay}-${months[i + 1]}-${year}`}
-							  today={theDay}
-						      />
-						  );
-					      } else {
-						  return (
-						      <TableDate
-							  dist="gen"
-							  uuid={`${theDay}-${month}-${year}`}
-							  today={theDay}
-						      />
-						  );
-					      }
-					  })}
-				      </tr>
-				  ))}
-			      </tbody>
-			  </table>
+			  <Month i={i} month={month} />
 		      </div>
 		  );
               }
