@@ -1,50 +1,52 @@
-import {Month} from "../grid.tsx"
-
+import { Month } from "../grid"
+import { EventsProvider } from "../context";
 const monthsObj = [
-    {0: "January"},
-    {1: "Febuary"},
-    {2: "March"},
-    {3: "April"},
-    {4: "May"},
-    {5: "June"},
-    {6: "July"},
-    {7: "August"},
-    {8: "September"},
-    {9: "October"},
-    {10: "November"},
-    {11: "December"},
+	{ id: "January" },
+	{ id: "Febuary" },
+	{ id: "March" },
+	{ id: "April" },
+	{ id: "May" },
+	{ id: "June" },
+	{ id: "July" },
+	{ id: "August" },
+	{ id: "September" },
+	{ id: "October" },
+	{ id: "November" },
+	{ id: "December" },
 ]
 
 const months = [
-    "January",
-    "Febuary",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+	"January",
+	"Febuary",
+	"March",
+	"April",
+	"May",
+	"June",
+	"July",
+	"August",
+	"September",
+	"October",
+	"November",
+	"December",
 ];
-
-// Generate segments for [category]
-export async function generateStaticParams() {
-    return monthsObj
-}
-
-async function getMonth(params){
-    
-}
 
 export default function Page({ params }: {
     params: {eachMonth: string}
 }) {
-    console.log(params)
+    
+    let fragment
+    if(months.find(el => el === params.eachMonth) === undefined) {  
+	fragment = (
+	    <h1> 404 Error</h1>
+	)
+    }
+    else fragment = (<Month i={months.findIndex(el => el === params.eachMonth)} month={params.eachMonth}/>)
+
     return (
-	<h1> {params.eachMonth} </h1>
-	
-    )
+		<>
+		    <EventsProvider>
+			{fragment}
+		    </EventsProvider>
+		</>
+	)
 }

@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { useEventsDispatch, useEvents } from "./context.tsx";
-import Event from "./eventList.tsx";
+import { useEventsDispatch, useEvents } from "./context";
+import Event from "./eventList";
 let altModalParent: HTMLElement;
 
 export default function TableDate(props: any) {

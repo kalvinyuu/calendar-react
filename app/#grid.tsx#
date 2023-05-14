@@ -1,5 +1,5 @@
-import { EventsProvider } from "./context";
-import TableDate from "./client";
+import { EventsProvider } from "./context.tsx";
+import TableDate from "./client.tsx";
 import Link from "next/link";
 
 const months = [
@@ -204,8 +204,8 @@ function Grid({x, y, pic, col}) {
 		      <div
 			  className={`inline-block w-full mx-8 border border-black ${col}`}
 		      >
-			 <Link className="block text-center py-1.5" href={`/${month}`}>{month}</Link>
-			      <Month i={i} month={month} />
+			  <Link href={`/${month}`}>month}</a></Link>
+			  <Month i={i} month={month} />
 		      </div>
 		  );
               }
