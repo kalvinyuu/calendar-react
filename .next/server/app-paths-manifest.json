@@ -1,0 +1,4 @@
+{
+  "/page": "app/page.js",
+  "/[eachMonth]/page": "app/[eachMonth]/page.js"
+}
