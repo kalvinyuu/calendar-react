@@ -12,9 +12,11 @@ export default function TableDate(props: any) {
   const [showModal, setShowModal] = useState(false);
   let uuid = props.uuid;
   let today = props.today;
-  let dist = props.dist;
-  const modalParent = document.getElementById(`${dist}-${uuid}`);
-  const mod = document.getElementById("modal");
+    let dist = props.dist;
+    if (typeof window !== 'undefined') {
+	var modalParent = document.getElementById(`${dist}-${uuid}`);
+	var mod = document.getElementById("modal");
+    }
   const ref = useRef();
   useOnClickOutside(ref, () => setShowModal(false));
   useEffect(() => {

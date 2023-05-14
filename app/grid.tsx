@@ -1,31 +1,32 @@
 import { EventsProvider } from "./context.tsx";
 import TableDate from "./client.tsx";
-
 import Link from "next/link";
+
 const months = [
-  "January",
-  "Febuary",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
+    "January",
+    "Febuary",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
 ];
 // const week_days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const weekDays = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
 ];
+
 const days = [28 || 29, 30, 31];
 const date = new Date();
 const year = date.getFullYear();
@@ -109,12 +110,13 @@ arrSplit();
 
 function objMaker() {
   months.forEach((e, i) => {
-    yearObj[e] = monCal[i];
+      yearObj[e] = monCal[i];
+      
   });
 }
 objMaker();
 
-function Month({i, month}) {
+export function Month({i, month}) {
     return (
 	<table className="table-fixed w-full wrapper">
 	    <thead>
@@ -202,7 +204,7 @@ function Grid({x, y, pic, col}) {
 		      <div
 			  className={`inline-block w-full mx-8 border border-black ${col}`}
 		      >
-			  <Link href="/month/"> <a className="block text-center py-1.5 "> {month}</a> </Link>
+			  <Link href={`/${month}`}> <a className="block text-center py-1.5 "> {month}</a> </Link>
 			  <Month i={i} month={month} />
 		      </div>
 		  );

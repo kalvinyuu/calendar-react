@@ -58,4 +58,11 @@ function eventReducer(events, action) {
     }
   }
 }
-const initialEvents = JSON.parse(localStorage.getItem("my-events"));
+if (typeof window !== 'undefined') {
+    var initialEvents = JSON.parse(localStorage.getItem("my-events"));
+} else {
+    console.log('we are running on the server');
+}
+
+
+ 
