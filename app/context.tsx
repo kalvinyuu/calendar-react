@@ -7,16 +7,18 @@ const EventDispatchContext = createContext(null);
 export function EventsProvider({ children }) {
     const [events, dispatch] = useReducer(eventReducer, initialEvents);
     useEffect(() => {
-	localStorage.setItem("my-events", JSON.stringify(events));
-  }, [events]);
-	//const events = useEvents()
-	return (
-		<EventContext.Provider value={events}>
-			<EventDispatchContext.Provider value={dispatch}>
-				{children}
-			</EventDispatchContext.Provider>
-		</EventContext.Provider>
-	);
+	
+	events.length > 0 ? localStorage.setItem("my-events", JSON.stringify(events))
+		      : localStorage.setItem("my-events", JSON.stringify([]));
+    }, [events]);
+    return (
+	<EventContext.Provider value={events}>
+	    <EventDispatchContext.Provider value={dispatch}>
+		{children}
+	    </EventDispatchContext.Provider>
+	</EventContext.Provider>
+    );
+
 }
 
 export function useEvents() {

@@ -145,43 +145,64 @@ export function Month({i, month}) {
 			    let p = j * 7 + (k + 1);
 			    if (theDay > 13 && theDay > p && i === 0) {
 				return (
-				    <TableDate
+				    <td   
+					className="border-t border-black whitespace-nowrap">
+					<Link href={`/${month[11]}/${theDay}`}>
+					<TableDate
 					dist="cc"
 					uuid={`${theDay}-${months[11]}-${year - 1}`}
-					today={theDay}
-				    />
+					/>
+					</Link>
+				    </td>
 				);
 			    } else if (theDay > 13 && theDay > p) {
 				return (
-				    <TableDate
-					dist="cc"
-					uuid={`${theDay}-${months[i - 1]}-${year}`}
-					today={theDay}
-				    />
+				    <td  
+					className="border-t border-black whitespace-nowrap">
+					<Link href={`/${month[i - 1]}/${theDay}`}>
+					    <TableDate
+					    dist="cc"
+					    uuid={`${theDay}-${months[i - 1]}-${year}`}
+					    />
+					</Link>
+				    </td>
 				);
 			    } else if (theDay < 14 && p > monLen[i] && i === 11) {
 				return (
-				    <TableDate
-					dist="cc"
-					uuid={`${theDay}-${months[0]}-${year + 1}`}
-					today={theDay}
-				    />
+				    <td  
+					className="border-t border-black whitespace-nowrap">
+					<Link href={`/${month[0]}/${theDay}`}>
+					    <TableDate
+						dist="cc"
+						uuid={`${theDay}-${months[0]}-${year + 1}`}
+					    />
+					</Link>
+				    </td>
 				);
 			    } else if (theDay < 14 && p > monLen[i]) {
 				return (
-				    <TableDate
-					dist="cc"
-					uuid={`${theDay}-${months[i + 1]}-${year}`}
-					today={theDay}
-				    />
+				    <td  
+					className="border-t border-black whitespace-nowrap">
+					
+					<Link href={`/${month[i + 1]}/${theDay}`}>
+					    <TableDate
+					    dist="cc"
+					    uuid={`${theDay}-${months[i + 1]}-${year}`}
+					    />
+					</Link>
+				    </td>
 				);
 			    } else {
 				return (
-				    <TableDate
-					dist="gen"
-					uuid={`${theDay}-${month}-${year}`}
-					today={theDay}
-				    />
+				    <td  
+					className="border-t border-black whitespace-nowrap">					
+					<Link href={`/${month}/${theDay}`}>
+					    <TableDate
+					    dist="gen"
+					    uuid={`${theDay}-${month}-${year}`}
+					    />
+					</Link>
+				    </td>
 				);
 			    }
 			})}
