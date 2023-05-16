@@ -148,55 +148,55 @@ export function Month({i, month}) {
 				return (
 				    <td   
 					className="border-t border-black whitespace-nowrap">
-					<Link href={`/${month[11]}/${theDay}`}><Image alt="link" src="/../public/images/linkIcon.svg" width={12} height={12}/></Link>
 					<TableDate
 					dist="cc"
 					uuid={`${theDay}-${months[11]}-${year - 1}`}
 					/>
+					<Link href={`/${month[11]}/${theDay}`}><Image alt="link" src="/../public/images/linkIcon.svg" width={12} height={12}/></Link>
 				    </td>
 				);
 			    } else if (theDay > 13 && theDay > p) {
 				return (
 				    <td  
 					className="border-t border-black whitespace-nowrap">
-					<Link href={`/${month[i - 1]}/${theDay}`}><Image alt="link" src="/../public/images/linkIcon.svg" width={12} height={12}/></Link>
 					<TableDate
 					    dist="cc"
 					    uuid={`${theDay}-${months[i - 1]}-${year}`}
 					/>
+					<Link href={`/${month[i - 1]}/${theDay}`}><Image alt="link" src="/../public/images/linkIcon.svg" width={12} height={12}/></Link>
 				    </td>
 				);
 			    } else if (theDay < 14 && p > monLen[i] && i === 11) {
 				return (
 				    <td  
 					className="border-t border-black whitespace-nowrap">
-					<Link href={`/${month[0]}/${theDay}`}><Image alt="link" src="/../public/images/linkIcon.svg" width={12} height={12}/></Link>
 					<TableDate
 					    dist="cc"
 					    uuid={`${theDay}-${months[0]}-${year + 1}`}
 					/>
+					<Link href={`/${month[0]}/${theDay}`}><Image alt="link" src="/../public/images/linkIcon.svg" width={12} height={12}/></Link>
 				    </td>
 				);
 			    } else if (theDay < 14 && p > monLen[i]) {
 				return (
 				    <td  
-					className="border-t border-black whitespace-nowrap">	
-					<Link href={`/${month[i + 1]}/${theDay}`}><Image alt="link" src="/../public/images/linkIcon.svg" width={12} height={12}/></Link>
+					className="border-t border-black whitespace-nowrap">
 					<TableDate
 					    dist="cc"
 					    uuid={`${theDay}-${months[i + 1]}-${year}`}
-					/>
+					/>	
+					<Link href={`/${month[i + 1]}/${theDay}`}><Image alt="link" src="/../public/images/linkIcon.svg" width={12} height={12}/></Link>
 				    </td>
 				);
 			    } else {
 				return (
 				    <td  
 					className="border-t border-black whitespace-nowrap">					
-					<Link href={`/${month}/${theDay}`}><Image alt="link" src="/../public/images/linkIcon.svg" width={12} height={12}/></Link>
 					<TableDate
 					    dist="gen"
 					    uuid={`${theDay}-${month}-${year}`}
 					/>
+					<Link href={`/${month}/${theDay}`}><Image alt="link" src="/../public/images/linkIcon.svg" width={12} height={12}/></Link>
 				    </td>
 				);
 			    }
@@ -212,20 +212,19 @@ export function Month({i, month}) {
 function Grid({x, y, pic, col}) {
   return (
       <div
-	  className={` max-md:flex max-md:flex-col md:grid md:grid-cols-2 place-content-evenly bg-fixed gap-y-16 bg-center bg-no-repeat w-screen md:h-screen place-items-center px-4 gap-x-4 ${pic} bg-cover overflow-visible`}
+	  className={`block relative max-md:flex max-md:flex-col md:grid md:grid-cols-2 place-content-evenly bg-fixed gap-y-16 bg-center bg-no-repeat w-screen place-items-center p-8 gap-x-4 ${pic} bg-cover`}
       >
-	  {months.map((month, i) => {
-              if (i >= x && i <= y) {
-		  return (
-		      <div
-			  className={`inline-block w-full mx-8 border border-black ${col}`}
-		      >
-			 <Link className="block text-center py-1.5" href={`/${month}`}>{month}</Link>
-			      <Month i={i} month={month} />
-		      </div>
-		  );
-              }
-	  })}
+	  {months.slice(x, y + 1).map((month, i) => (
+              <div
+		  key={i}
+		  className={`relative block w-full mx-8 border border-black ${col} h-25 `}
+              >
+		  <Link className="block text-center py-1.5" href={`/${month}`}>
+		      {month}
+		  </Link>
+		  <Month i={i + x} month={month} />
+              </div>
+	  ))}
       </div>
   );
 }
