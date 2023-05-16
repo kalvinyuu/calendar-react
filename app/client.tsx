@@ -23,7 +23,7 @@ export default function TableDate({uuid, dist}) {
         event.altDestination == `${dist}-${uuid}`
     );
     setDayEvents(filteredEvents);
-  }, [events, modalParent]);
+  }, [events]);
   return (
 	  <div id={`${dist}-${uuid}`}>
               <button

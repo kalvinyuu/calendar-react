@@ -14,13 +14,14 @@ const monthsObj = [
     { id: "November" },
     { id: "December" },
 ]
+const monChecker = months.find(el => el === params.eachMonth)
 
 export default function Page({ params }: {
     params: {eachMonth: string}
 }) {
     
     let fragment
-    if(months.find(el => el === params.eachMonth) === undefined) {  
+    if( monChecker === undefined) {  
 	fragment = (
 	    <h1> 404 Error</h1>
 	)

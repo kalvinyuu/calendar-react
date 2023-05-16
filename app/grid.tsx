@@ -1,8 +1,9 @@
 import { EventsProvider } from "./context";
 import TableDate from "./client";
 import Link from "next/link";
+import Image from 'next/image';
 
-const months = [
+export const months = [
     "January",
     "Febuary",
     "March",
@@ -29,11 +30,11 @@ const weekDays = [
 
 const days = [28 || 29, 30, 31];
 const date = new Date();
-const year = date.getFullYear();
+export let year = date.getFullYear();
 let doomsDay = [3, 28, 14, 4, 9, 6, 11, 8, 5, 10, 7, 12];
 const PIday = new Date(`March 14, ${year}`);
 const dayOfDoom = PIday.getDay();
-let monLen: number[] = [];
+export let monLen: number[] = [];
 let firstDay: number[] = [];
 let monCal: any = [[], [], [], [], [], [], [], [], [], [], [], []];
 let yearObj = {};
@@ -147,61 +148,55 @@ export function Month({i, month}) {
 				return (
 				    <td   
 					className="border-t border-black whitespace-nowrap">
-					<Link href={`/${month[11]}/${theDay}`}>
+					<Link href={`/${month[11]}/${theDay}`}><Image alt="link" src="/../public/images/linkIcon.svg" width={12} height={12}/></Link>
 					<TableDate
 					dist="cc"
 					uuid={`${theDay}-${months[11]}-${year - 1}`}
 					/>
-					</Link>
 				    </td>
 				);
 			    } else if (theDay > 13 && theDay > p) {
 				return (
 				    <td  
 					className="border-t border-black whitespace-nowrap">
-					<Link href={`/${month[i - 1]}/${theDay}`}>
-					    <TableDate
+					<Link href={`/${month[i - 1]}/${theDay}`}><Image alt="link" src="/../public/images/linkIcon.svg" width={12} height={12}/></Link>
+					<TableDate
 					    dist="cc"
 					    uuid={`${theDay}-${months[i - 1]}-${year}`}
-					    />
-					</Link>
+					/>
 				    </td>
 				);
 			    } else if (theDay < 14 && p > monLen[i] && i === 11) {
 				return (
 				    <td  
 					className="border-t border-black whitespace-nowrap">
-					<Link href={`/${month[0]}/${theDay}`}>
-					    <TableDate
-						dist="cc"
-						uuid={`${theDay}-${months[0]}-${year + 1}`}
-					    />
-					</Link>
+					<Link href={`/${month[0]}/${theDay}`}><Image alt="link" src="/../public/images/linkIcon.svg" width={12} height={12}/></Link>
+					<TableDate
+					    dist="cc"
+					    uuid={`${theDay}-${months[0]}-${year + 1}`}
+					/>
 				    </td>
 				);
 			    } else if (theDay < 14 && p > monLen[i]) {
 				return (
 				    <td  
-					className="border-t border-black whitespace-nowrap">
-					
-					<Link href={`/${month[i + 1]}/${theDay}`}>
-					    <TableDate
+					className="border-t border-black whitespace-nowrap">	
+					<Link href={`/${month[i + 1]}/${theDay}`}><Image alt="link" src="/../public/images/linkIcon.svg" width={12} height={12}/></Link>
+					<TableDate
 					    dist="cc"
 					    uuid={`${theDay}-${months[i + 1]}-${year}`}
-					    />
-					</Link>
+					/>
 				    </td>
 				);
 			    } else {
 				return (
 				    <td  
 					className="border-t border-black whitespace-nowrap">					
-					<Link href={`/${month}/${theDay}`}>
-					    <TableDate
+					<Link href={`/${month}/${theDay}`}><Image alt="link" src="/../public/images/linkIcon.svg" width={12} height={12}/></Link>
+					<TableDate
 					    dist="gen"
 					    uuid={`${theDay}-${month}-${year}`}
-					    />
-					</Link>
+					/>
 				    </td>
 				);
 			    }
