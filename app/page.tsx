@@ -1,9 +1,12 @@
 import TriGrid from "./grid.tsx";
+import { EventsProvider } from "./context";
 
 export default function Page() {
-  return (
-    <div>
-      <TriGrid />
-    </div>
-  );
+    return (
+	<EventsProvider>
+	    <div>
+		<TriGrid />
+	    </div>
+	</EventsProvider>
+    );
 }

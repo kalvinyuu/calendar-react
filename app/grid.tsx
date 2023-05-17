@@ -1,4 +1,3 @@
-import { EventsProvider } from "./context";
 import TableDate from "./client";
 import Link from "next/link";
 import Image from 'next/image';
@@ -30,7 +29,7 @@ const weekDays = [
 
 const days = [28 || 29, 30, 31];
 const date = new Date();
-export let year = date.getFullYear();
+export let year = date.getFullYear()
 let doomsDay = [3, 28, 14, 4, 9, 6, 11, 8, 5, 10, 7, 12];
 const PIday = new Date(`March 14, ${year}`);
 const dayOfDoom = PIday.getDay();
@@ -51,9 +50,10 @@ function calcLeap(x) {
   }
 }
 calcLeap(year);
+
 function daysInMon(x: string[], y: number[]) {
   for (let i = 0; i <= 11; i++) {
-    if (i == 1) {
+    if (i == 1) { 
       monLen.push(y[0]);
     }
     if (i == 3 || i == 5 || i == 8 || i == 10) {
@@ -230,15 +230,14 @@ function Grid({x, y, pic, col}) {
 }
 export default function TriGrid() {
   return (
-    <EventsProvider>
       <div id="home" className="bg-slate-400 overflow-visible">
         <h1 className="text-white text-2xl text-center pt-6">
-          Welcome to {year}
+            Welcome to {year}
         </h1>
         <Grid x={0} y={3} pic="bg-snow" col="bg-[#666666]/60" />
         <Grid x={4} y={7} pic="bg-summer" col="bg-[#666666]/60" />
         <Grid x={8} y={11} pic="bg-autumn" col="bg-[#666666]/60" />
       </div>
-    </EventsProvider>
   );
 }
+

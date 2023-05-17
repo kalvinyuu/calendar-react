@@ -6,10 +6,10 @@ import Event from "./eventList";
 let altModalParent: HTMLElement;
 
 export default function TableDate({uuid, dist}) {
-  //App.js add initialEvents as local storage
-  const [dayEvents, setDayEvents] = useState([]);
+    //App.js add initialEvents as local storage
+    const [dayEvents, setDayEvents] = useState([]);
     const events = useEvents();
-  const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     if (typeof window !== 'undefined') {
 	var modalParent = document.getElementById(`${dist}-${uuid}`);
 	var mod = document.getElementById("modal");

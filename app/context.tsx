@@ -1,11 +1,12 @@
 "use client";
-import { useReducer, useEffect, createContext, useContext } from "react";
+import { useReducer, useEffect, createContext, useContext, useState } from "react";
 //import {initialEvents} from './client.tsx'
 const EventContext = createContext(null);
 const EventDispatchContext = createContext(null);
 
 export function EventsProvider({ children }) {
     const [events, dispatch] = useReducer(eventReducer, initialEvents);
+    //const [year, yearChange] = useState(date.getFullYear())
     useEffect(() => {
 	
 	events.length > 0 ? localStorage.setItem("my-events", JSON.stringify(events))
