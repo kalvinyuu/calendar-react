@@ -20,7 +20,16 @@ module.exports = {
         "@typescript-eslint",
 	"prettier"
     ],
+    "settings": {
+	"react": {
+	    "version": "detect"
+	}
+    }
     "rules": {
 	"prettier/prettier": "error",
+	"react/react-in-jsx-scope": "off",
+	"react/jsx-uses-react": "off",
+	"no-var": "off",
+	"react/prop-types": "off"
     }
 }
