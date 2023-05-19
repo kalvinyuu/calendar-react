@@ -1,5 +1,5 @@
 "use client";
-import { useEvents, useEventsDispatch } from "./context";
+import { useEventsDispatch } from "./context";
 import { useState, useRef } from "react";
 import { createPortal } from "react-dom";
 //import useOnClickOutside from "./client.tsx";

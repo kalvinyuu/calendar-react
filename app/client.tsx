@@ -12,7 +12,6 @@ export default function TableDate({uuid, dist}) {
     const [showModal, setShowModal] = useState(false);
     if (typeof window !== 'undefined') {
 	var modalParent = document.getElementById(`${dist}-${uuid}`);
-	var mod = document.getElementById("modal");
     }
   const ref = useRef();
   useOnClickOutside(ref, () => setShowModal(false));

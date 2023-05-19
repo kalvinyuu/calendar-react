@@ -1,12 +1,10 @@
-import TriGrid from "./grid.tsx";
-import { EventsProvider } from "./context";
+import TriGrid from "./grid";
+
 
 export default function Page() {
     return (
-	<EventsProvider>
-	    <div>
-		<TriGrid />
-	    </div>
-	</EventsProvider>
+	<div>
+	    <TriGrid year={new Date().getFullYear()}/>
+	</div>
     );
 }

@@ -1,6 +1,7 @@
 import TableDate from "./client";
 import Link from "next/link";
 import Image from 'next/image';
+//import { useYear } from "./context";
 
 export const months = [
     "January",
@@ -16,8 +17,7 @@ export const months = [
     "November",
     "December",
 ];
-// const week_days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const weekDays = [
+const weekDays = [ 
     "Sunday",
     "Monday",
     "Tuesday",
@@ -27,32 +27,24 @@ const weekDays = [
     "Saturday",
 ];
 
-const days = [28 || 29, 30, 31];
-const date = new Date();
-export let year = date.getFullYear()
-let doomsDay = [3, 28, 14, 4, 9, 6, 11, 8, 5, 10, 7, 12];
-const PIday = new Date(`March 14, ${year}`);
-const dayOfDoom = PIday.getDay();
-export let monLen: number[] = [];
-let firstDay: number[] = [];
-let monCal: any = [[], [], [], [], [], [], [], [], [], [], [], []];
-let yearObj = {};
+export const days = [28 || 29, 30, 31];
+export const doomsDay = [3, 28, 14, 4, 9, 6, 11, 8, 5, 10, 7, 12];
+export let monLen: number[] = []
+let firstDay: number[]
+let monCal: any[]
 
-function calcLeap(x) {
-  if (x % 4 == 0) {
-    const leap = true;
+export function isLeap(x) { 
+    if (x % 4 == 0) {
     days[0] = 29;
     doomsDay[0] += 1;
     doomsDay[1] += 1;
   } else {
-    const leap = false;
     days[0] = 28;
   }
 }
-calcLeap(year);
 
-function daysInMon(x: string[], y: number[]) {
-  for (let i = 0; i <= 11; i++) {
+export function daysInMon(x: string[], y: number[]) {
+    for (let i = 0; i <= 11; i++) {
     if (i == 1) { 
       monLen.push(y[0]);
     }
@@ -63,11 +55,11 @@ function daysInMon(x: string[], y: number[]) {
     }
   }
 }
-daysInMon(months, days);
+
 
 function getDay(x, y) {
   for (let i = 0; i < x.length; i++) {
-    let ans = (x[i] % 7) - (y + 1);
+    const ans = (x[i] % 7) - (y + 1);
     if (ans > 0) {
       firstDay.push(7 - ans);
     } else {
@@ -75,10 +67,10 @@ function getDay(x, y) {
     }
   }
 }
-getDay(doomsDay, dayOfDoom);
 
-function arr42() {
-  for (let i = 0; i < months.length; i++) {
+
+function arr42() { // populates monCal with 12 arrays of the 42 days
+    for (let i = 0; i < months.length; i++) {
     let k = monLen.at(i - 1);
     for (let j = firstDay[i]; j > 0; j--) {
       monCal[i].unshift(k);
@@ -94,11 +86,11 @@ function arr42() {
     }
   }
 }
-arr42();
 
-function arrSplit() {
+
+function arrSplit() { // the 42 days of monCal into arrays of a week 
   for (let i = 0; i < months.length; i++) {
-    let temp: number[] = [];
+    const temp: number[] = [];
     let start = 0;
     for (let j = 7; j < 43; j += 7) {
       temp.push(monCal[i].slice(start, j));
@@ -107,17 +99,19 @@ function arrSplit() {
     monCal[i] = temp;
   }
 }
-arrSplit();
 
-function objMaker() {
-  months.forEach((e, i) => {
-      yearObj[e] = monCal[i];
-      
-  });
-}
-objMaker();
 
-export function Month({i, month}) {
+export function Month({i, month, year}) {    
+    if (monCal = [[], [], [], [], [], [], [], [], [], [], [], []]) {
+	monLen = [];
+	firstDay = [];
+	const dayOfDoom = new Date(`March 14, ${year}`).getDay();
+	isLeap(year);
+	daysInMon(months, days);
+	getDay(doomsDay, dayOfDoom);
+	arr42();
+	arrSplit();	
+    }
     return (
 	<table className="table-fixed w-full wrapper">
 	    <thead>
@@ -140,10 +134,10 @@ export function Month({i, month}) {
 		</tr>
 	    </thead>
 	    <tbody>
-		{monCal[i].map((week: number[], j) => (
+		{monCal[i].map((week: number[], j) => ( 
 		    <tr className="overflow-hidden leading-6 whitespace-nowrap">
 			{week.map((theDay, k) => {
-			    let p = j * 7 + (k + 1);
+			    const p = j * 7 + (k + 1);
 			    if (theDay > 13 && theDay > p && i === 0) {
 				return (
 				    <td   
@@ -152,7 +146,7 @@ export function Month({i, month}) {
 					dist="cc"
 					uuid={`${theDay}-${months[11]}-${year - 1}`}
 					/>
-					<Link href={`/${month[11]}/${theDay}`}><Image alt="link" src="/../public/images/linkIcon.svg" width={12} height={12}/></Link>
+					<Link href={`${year}/${month[11]}/${theDay}`}><Image alt="link" src="/../public/images/linkIcon.svg" width={12} height={12}/></Link>
 				    </td>
 				);
 			    } else if (theDay > 13 && theDay > p) {
@@ -163,7 +157,7 @@ export function Month({i, month}) {
 					    dist="cc"
 					    uuid={`${theDay}-${months[i - 1]}-${year}`}
 					/>
-					<Link href={`/${month[i - 1]}/${theDay}`}><Image alt="link" src="/../public/images/linkIcon.svg" width={12} height={12}/></Link>
+					<Link href={`${year}/${month[i - 1]}/${theDay}`}><Image alt="link" src="/../public/images/linkIcon.svg" width={12} height={12}/></Link>
 				    </td>
 				);
 			    } else if (theDay < 14 && p > monLen[i] && i === 11) {
@@ -174,7 +168,7 @@ export function Month({i, month}) {
 					    dist="cc"
 					    uuid={`${theDay}-${months[0]}-${year + 1}`}
 					/>
-					<Link href={`/${month[0]}/${theDay}`}><Image alt="link" src="/../public/images/linkIcon.svg" width={12} height={12}/></Link>
+					<Link href={`${year}/${month[0]}/${theDay}`}><Image alt="link" src="/../public/images/linkIcon.svg" width={12} height={12}/></Link>
 				    </td>
 				);
 			    } else if (theDay < 14 && p > monLen[i]) {
@@ -185,7 +179,7 @@ export function Month({i, month}) {
 					    dist="cc"
 					    uuid={`${theDay}-${months[i + 1]}-${year}`}
 					/>	
-					<Link href={`/${month[i + 1]}/${theDay}`}><Image alt="link" src="/../public/images/linkIcon.svg" width={12} height={12}/></Link>
+					<Link href={`${year}/${month[i + 1]}/${theDay}`}><Image alt="link" src="/../public/images/linkIcon.svg" width={12} height={12}/></Link>
 				    </td>
 				);
 			    } else {
@@ -196,20 +190,20 @@ export function Month({i, month}) {
 					    dist="gen"
 					    uuid={`${theDay}-${month}-${year}`}
 					/>
-					<Link href={`/${month}/${theDay}`}><Image alt="link" src="/../public/images/linkIcon.svg" width={12} height={12}/></Link>
+					<Link href={`${year}/${month}/${theDay}`}><Image alt="link" src="/../public/images/linkIcon.svg" width={12} height={12}/></Link>
 				    </td>
 				);
 			    }
 			})}
 		    </tr>
-		))}
+		))} 
 	    </tbody>
 	</table>
     )
 }
 
 
-function Grid({x, y, pic, col}) {
+function Grid({x, y, pic, col, year}) {
   return (
       <div
 	  className={`block relative max-md:flex max-md:flex-col md:grid md:grid-cols-2 place-content-evenly bg-fixed gap-y-16 bg-center bg-no-repeat w-screen place-items-center p-8 gap-x-4 ${pic} bg-cover`}
@@ -219,25 +213,30 @@ function Grid({x, y, pic, col}) {
 		  key={i}
 		  className={`relative block w-full mx-8 border border-black ${col} h-25 `}
               >
-		  <Link className="block text-center py-1.5" href={`/${month}`}>
+		  <Link className="block text-center py-1.5" href={`/${year}/${month}`}>
 		      {month}
 		  </Link>
-		  <Month i={i + x} month={month} />
+		  <Month i={i + x} month={month} year={year}/>
               </div>
 	  ))}
       </div>
   );
+} 
+export default function TriGrid({year}) {
+    const dayOfDoom = new Date(`March 14, ${year}`).getDay();
+    monLen = [];
+    firstDay = [];
+    monCal  = [[], [], [], [], [], [], [], [], [], [], [], []];
+    isLeap(year);
+    daysInMon(months, days);
+    getDay(doomsDay, dayOfDoom);
+    arr42();
+    arrSplit();
+    return (
+	<div id="home" className="bg-slate-400 overflow-visible">	    
+            <Grid x={0} y={3} pic="bg-snow" col="bg-[#666666]/60" year={year} />
+            <Grid x={4} y={7} pic="bg-summer" col="bg-[#666666]/60" year={year}/>
+            <Grid x={8} y={11} pic="bg-autumn" col="bg-[#666666]/60" year={year}/>
+	</div>
+    );
 }
-export default function TriGrid() {
-  return (
-      <div id="home" className="bg-slate-400 overflow-visible">
-        <h1 className="text-white text-2xl text-center pt-6">
-            Welcome to {year}
-        </h1>
-        <Grid x={0} y={3} pic="bg-snow" col="bg-[#666666]/60" />
-        <Grid x={4} y={7} pic="bg-summer" col="bg-[#666666]/60" />
-        <Grid x={8} y={11} pic="bg-autumn" col="bg-[#666666]/60" />
-      </div>
-  );
-}
-

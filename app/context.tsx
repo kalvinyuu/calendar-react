@@ -3,27 +3,40 @@ import { useReducer, useEffect, createContext, useContext, useState } from "reac
 //import {initialEvents} from './client.tsx'
 const EventContext = createContext(null);
 const EventDispatchContext = createContext(null);
+const YearContext = createContext(null);
+const YearChangeContext = createContext(null);
 
 export function EventsProvider({ children }) {
+    const date = new Date();
     const [events, dispatch] = useReducer(eventReducer, initialEvents);
-    //const [year, yearChange] = useState(date.getFullYear())
+    const [year, yearChange] = useState(date.getFullYear())
     useEffect(() => {
 	
 	events.length > 0 ? localStorage.setItem("my-events", JSON.stringify(events))
 		      : localStorage.setItem("my-events", JSON.stringify([]));
     }, [events]);
     return (
-	<EventContext.Provider value={events}>
-	    <EventDispatchContext.Provider value={dispatch}>
-		{children}
-	    </EventDispatchContext.Provider>
-	</EventContext.Provider>
+	<YearContext.Provider value={year}>
+	    <YearChangeContext.Provider value={yearChange}>
+		<EventContext.Provider value={events}>
+		    <EventDispatchContext.Provider value={dispatch}>
+			{children}
+		    </EventDispatchContext.Provider>
+		</EventContext.Provider>
+	    </YearChangeContext.Provider>
+	</YearContext.Provider>
     );
 
 }
 
+export function useYear() {
+    return useContext(YearContext);
+}
+export function useYearChange() {
+    return useContext(YearChangeContext);
+}
 export function useEvents() {
-  return useContext(EventContext);
+    return useContext(EventContext);
 }
 export function useEventsDispatch() {
   return useContext(EventDispatchContext);
