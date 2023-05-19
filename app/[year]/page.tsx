@@ -1,7 +1,5 @@
-import TriGrid  from "../grid"
+import TriGrid from "../grid";
 
-export default function Page({params}) {
-    return(
-	<TriGrid year={params.year} />
-    )
+export default function Page({ params }) {
+  return <TriGrid year={params.year} />;
 }

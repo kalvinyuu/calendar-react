@@ -5,14 +5,14 @@ import { useEventsDispatch, useEvents } from "./context";
 import Event from "./eventList";
 let altModalParent: HTMLElement;
 
-export default function TableDate({uuid, dist}) {
-    //App.js add initialEvents as local storage
-    const [dayEvents, setDayEvents] = useState([]);
-    const events = useEvents();
-    const [showModal, setShowModal] = useState(false);
-    if (typeof window !== 'undefined') {
-	var modalParent = document.getElementById(`${dist}-${uuid}`);
-    }
+export default function TableDate({ uuid, dist }) {
+  //App.js add initialEvents as local storage
+  const [dayEvents, setDayEvents] = useState([]);
+  const events = useEvents();
+  const [showModal, setShowModal] = useState(false);
+  if (typeof window !== "undefined") {
+    var modalParent = document.getElementById(`${dist}-${uuid}`);
+  }
   const ref = useRef();
   useOnClickOutside(ref, () => setShowModal(false));
   useEffect(() => {
@@ -24,36 +24,32 @@ export default function TableDate({uuid, dist}) {
     setDayEvents(filteredEvents);
   }, [events]);
   return (
-	  <div id={`${dist}-${uuid}`}>
-              <button
-		  onClick={() => setShowModal(true)}
-		  className="px-2 border-black border rounded-full m-2 w-min btn"
-              >
-		  {uuid.match(/\d+/g)[0]}
-              </button>
-              {showModal &&
-               createPortal(
-		   <div ref={ref}>
-		       <Modal
-			   abc={uuid}
-			   onClose={() => setShowModal(false)}
-			   dist={dist}
-		       />
-		   </div>,
-		   modalParent
-              )}
-              {dayEvents.map((event) => (
-		  <Event
-		      key={event.id}
-		      emoji={event.emoji}
-		      name={event.name}
-		      desc={event.desc}
-		      event={event}
-		      destination={modalParent}
-		      click={useOnClickOutside}
-		  />
-              ))}
-	  </div>
+    <div id={`${dist}-${uuid}`}>
+      <button
+        onClick={() => setShowModal(true)}
+        className="px-2 border-black border rounded-full m-2 w-min btn"
+      >
+        {uuid.match(/\d+/g)[0]}
+      </button>
+      {showModal &&
+        createPortal(
+          <div ref={ref}>
+            <Modal abc={uuid} onClose={() => setShowModal(false)} dist={dist} />
+          </div>,
+          modalParent
+        )}
+      {dayEvents.map((event) => (
+        <Event
+          key={event.id}
+          emoji={event.emoji}
+          name={event.name}
+          desc={event.desc}
+          event={event}
+          destination={modalParent}
+          click={useOnClickOutside}
+        />
+      ))}
+    </div>
   );
 }
 //imported function from stackOverflow
@@ -91,8 +87,8 @@ function Modal({ abc, onClose, dist }) {
   const [desc, setDesc] = useState("");
   let alt: string;
   let altDist: string;
-    const dispatch = useEventsDispatch();
-    const events = useEvents();
+  const dispatch = useEventsDispatch();
+  const events = useEvents();
   function opositer() {
     if (dist === "gen") {
       altDist = "cc";

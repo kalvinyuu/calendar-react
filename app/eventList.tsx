@@ -4,7 +4,14 @@ import { useState, useRef } from "react";
 import { createPortal } from "react-dom";
 //import useOnClickOutside from "./client.tsx";
 
-export default function Event({ event, emoji, name, desc, destination, click }) {
+export default function Event({
+  event,
+  emoji,
+  name,
+  desc,
+  destination,
+  click,
+}) {
   const [isEditing, setEditing] = useState(false);
   const [isVisible, setVisible] = useState(false);
   const ref = useRef();
@@ -15,7 +22,7 @@ export default function Event({ event, emoji, name, desc, destination, click }) 
   if (isEditing) {
     //edit
     EventContent = (
-	<span className="flex flex-col absolute">
+      <span className="flex flex-col absolute">
         <input
           value={emoji}
           onChange={(e) => {
@@ -28,31 +35,31 @@ export default function Event({ event, emoji, name, desc, destination, click }) 
             });
           }}
         />
-          <input
-            value={name}
-            onChange={(e) => {
-              dispatch({
-                type: "changed",
-                event: {
-                  ...event,
-                  name: e.target.value,
-                },
-              });
-            }}
-          />
-          <input
-            value={desc}
-            onChange={(e) => {
-              dispatch({
-                type: "changed",
-                event: {
-                  ...event,
-                  desc: e.target.value,
-                },
-              });
-            }}
-          />
-	  <span>
+        <input
+          value={name}
+          onChange={(e) => {
+            dispatch({
+              type: "changed",
+              event: {
+                ...event,
+                name: e.target.value,
+              },
+            });
+          }}
+        />
+        <input
+          value={desc}
+          onChange={(e) => {
+            dispatch({
+              type: "changed",
+              event: {
+                ...event,
+                desc: e.target.value,
+              },
+            });
+          }}
+        />
+        <span>
           <button onClick={() => setEditing(false)}>save</button>
           <button
             onClick={() => {
@@ -64,7 +71,7 @@ export default function Event({ event, emoji, name, desc, destination, click }) 
           >
             remove
           </button>
-	</span>
+        </span>
       </span>
     );
   } else {
@@ -77,8 +84,8 @@ export default function Event({ event, emoji, name, desc, destination, click }) 
           {emoji}
         </a>
         {isVisible &&
-         createPortal(
-              <div ref={ref} className="overflow-visible absolute bg-white p-8">
+          createPortal(
+            <div ref={ref} className="overflow-visible absolute bg-white p-8">
               <div className="">
                 <h3>{name}</h3>
                 <p>{desc}</p>
@@ -96,7 +103,7 @@ export default function Event({ event, emoji, name, desc, destination, click }) 
                   remove
                 </button>
               </div>
-              </div>,
+            </div>,
             destination
           )}
       </>
@@ -106,12 +113,12 @@ export default function Event({ event, emoji, name, desc, destination, click }) 
   return <>{EventContent}</>;
 }
 
-export function Alt ({event}) { 
+export function Alt({ event }) {
   const [isEditing, setEditing] = useState(false);
-    const dispatch = useEventsDispatch();
+  const dispatch = useEventsDispatch();
   if (isEditing) {
     var EventContent = (
-	<span className="flex flex-col absolute">
+      <span className="flex flex-col absolute">
         <input
           value={event.emoji}
           onChange={(e) => {
@@ -124,31 +131,31 @@ export function Alt ({event}) {
             });
           }}
         />
-          <input
-            value={event.name}
-            onChange={(e) => {
-              dispatch({
-                type: "changed",
-                event: {
-                  ...event,
-                  name: e.target.value,
-                },
-              });
-            }}
-          />
-          <input
-            value={event.desc}
-            onChange={(e) => {
-              dispatch({
-                type: "changed",
-                event: {
-                  ...event,
-                  desc: e.target.value,
-                },
-              });
-            }}
-          />
-	  <span>
+        <input
+          value={event.name}
+          onChange={(e) => {
+            dispatch({
+              type: "changed",
+              event: {
+                ...event,
+                name: e.target.value,
+              },
+            });
+          }}
+        />
+        <input
+          value={event.desc}
+          onChange={(e) => {
+            dispatch({
+              type: "changed",
+              event: {
+                ...event,
+                desc: e.target.value,
+              },
+            });
+          }}
+        />
+        <span>
           <button onClick={() => setEditing(false)}>save</button>
           <button
             onClick={() => {
@@ -160,32 +167,32 @@ export function Alt ({event}) {
           >
             remove
           </button>
-	</span>
+        </span>
       </span>
     );
   } else {
     var EventContent = (
       <>
-          {event.emoji}
-              <div className="">
-                <h3>{event.name}</h3>
-                <p>{event.desc}</p>
-              </div>
-              <div className="">
-                <button onClick={() => setEditing(true)}>edit</button>
-                <button
-                  onClick={() => {
-                    dispatch({
-                      type: "deleted",
-                      id: event.id,
-                    });
-                  }}
-                >
-                  remove
-                </button>
-              </div>
+        {event.emoji}
+        <div className="">
+          <h3>{event.name}</h3>
+          <p>{event.desc}</p>
+        </div>
+        <div className="">
+          <button onClick={() => setEditing(true)}>edit</button>
+          <button
+            onClick={() => {
+              dispatch({
+                type: "deleted",
+                id: event.id,
+              });
+            }}
+          >
+            remove
+          </button>
+        </div>
       </>
     );
   }
-    return <>{EventContent}</>
+  return <>{EventContent}</>;
 }
