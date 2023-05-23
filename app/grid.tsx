@@ -31,9 +31,9 @@ export const days = [28 || 29, 30, 31];
 export const doomsDay = [3, 28, 14, 4, 9, 6, 11, 8, 5, 10, 7, 12];
 export let monLen: number[] = [];
 let firstDay: number[];
-let monCal: any[];
+let monCal: any;
 
-export function isLeap(x) {
+export function isLeap(x: number) {
   if (x % 4 == 0) {
     days[0] = 29;
     doomsDay[0] += 1;
@@ -56,7 +56,7 @@ export function daysInMon(x: string[], y: number[]) {
   }
 }
 
-function getDay(x, y) {
+function getDay(x: number[], y: number) {
   for (let i = 0; i < x.length; i++) {
     const ans = (x[i] % 7) - (y + 1);
     if (ans > 0) {
@@ -70,7 +70,7 @@ function getDay(x, y) {
 function arr42() {
   // populates monCal with 12 arrays of the 42 days
   for (let i = 0; i < months.length; i++) {
-    let k = monLen.at(i - 1);
+    let k: any = monLen.at(i - 1);
     for (let j = firstDay[i]; j > 0; j--) {
       monCal[i].unshift(k);
       k--;
@@ -88,8 +88,8 @@ function arr42() {
 
 function arrSplit() {
   // the 42 days of monCal into arrays of a week
-  for (let i = 0; i < months.length; i++) {
-    const temp: number[] = [];
+  for (let i = 0; i < 12; i++) {
+    const temp = [];
     let start = 0;
     for (let j = 7; j < 43; j += 7) {
       temp.push(monCal[i].slice(start, j));
@@ -99,7 +99,15 @@ function arrSplit() {
   }
 }
 
-export function Month({ i, month, year }) {
+export function Month({
+  i,
+  month,
+  year,
+}: {
+  year: number;
+  i: number;
+  month: string;
+}) {
   if ((monCal = [[], [], [], [], [], [], [], [], [], [], [], []])) {
     monLen = [];
     firstDay = [];
@@ -134,7 +142,7 @@ export function Month({ i, month, year }) {
         </tr>
       </thead>
       <tbody>
-        {monCal[i].map((week: number[], j) => (
+        {monCal[i].map((week: number[], j: number) => (
           <tr className="overflow-hidden leading-6 whitespace-nowrap">
             {week.map((theDay, k) => {
               const p = j * 7 + (k + 1);
@@ -229,12 +237,24 @@ export function Month({ i, month, year }) {
   );
 }
 
-function Grid({ x, y, pic, col, year }) {
+function Grid({
+  start,
+  end,
+  pic,
+  col,
+  year,
+}: {
+  year: number;
+  pic: string;
+  col: string;
+  start: number;
+  end: number;
+}) {
   return (
     <div
       className={`block relative max-md:flex max-md:flex-col md:grid md:grid-cols-2 place-content-evenly bg-fixed gap-y-16 bg-center bg-no-repeat w-screen place-items-center p-8 gap-x-4 ${pic} bg-cover`}
     >
-      {months.slice(x, y + 1).map((month, i) => (
+      {months.slice(start, end + 1).map((month, i) => (
         <div
           key={i}
           className={`relative block w-full mx-8 border border-black ${col} h-25 `}
@@ -242,13 +262,14 @@ function Grid({ x, y, pic, col, year }) {
           <Link className="block text-center py-1.5" href={`/${year}/${month}`}>
             {month}
           </Link>
-          <Month i={i + x} month={month} year={year} />
+          <Month i={i + start} month={month} year={year} />
         </div>
       ))}
     </div>
   );
 }
-export default function TriGrid({ year }) {
+
+export default function TriGrid({ year }: { year: number }) {
   const dayOfDoom = new Date(`March 14, ${year}`).getDay();
   monLen = [];
   firstDay = [];
@@ -260,9 +281,21 @@ export default function TriGrid({ year }) {
   arrSplit();
   return (
     <div id="home" className="bg-slate-400 overflow-visible">
-      <Grid x={0} y={3} pic="bg-snow" col="bg-[#666666]/60" year={year} />
-      <Grid x={4} y={7} pic="bg-summer" col="bg-[#666666]/60" year={year} />
-      <Grid x={8} y={11} pic="bg-autumn" col="bg-[#666666]/60" year={year} />
+      <Grid start={0} end={3} pic="bg-snow" col="bg-[#666666]/60" year={year} />
+      <Grid
+        start={4}
+        end={7}
+        pic="bg-summer"
+        col="bg-[#666666]/60"
+        year={year}
+      />
+      <Grid
+        start={8}
+        end={11}
+        pic="bg-autumn"
+        col="bg-[#666666]/60"
+        year={year}
+      />
     </div>
   );
 }

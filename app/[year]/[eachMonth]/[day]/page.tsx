@@ -11,7 +11,11 @@ import {
 import { useEvents } from "../../../context";
 import { useState, useEffect } from "react";
 
-export default function Content({ params }) {
+export default function Content({
+  params,
+}: {
+  params: { day: number; eachMonth: string; year: number };
+}) {
   const [dayEvents, setDayEvents] = useState([]);
   console.log(monLen);
   const events = useEvents();

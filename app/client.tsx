@@ -1,83 +1,95 @@
-"use client";
+'use client'
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useEventsDispatch, useEvents } from "./context";
-import Event from "./eventList";
+import Event, { EventProps } from "./eventList";
 let altModalParent: HTMLElement;
 
-export default function TableDate({ uuid, dist }) {
-  //App.js add initialEvents as local storage
-  const [dayEvents, setDayEvents] = useState([]);
+export default function TableDate({
+  uuid,
+  dist,
+}: {
+  uuid: string;
+  dist: string;
+}) {
+  const [dayEvents, setDayEvents] = useState<EventProps[]>([]);
   const events = useEvents();
   const [showModal, setShowModal] = useState(false);
-  if (typeof window !== "undefined") {
-    var modalParent = document.getElementById(`${dist}-${uuid}`);
-  }
-  const ref = useRef();
+  const modalParent = typeof window !== "undefined" ? document.getElementById(`${dist}-${uuid}`) : null;
+  const ref = useRef<HTMLDivElement>(null);
+ 
   useOnClickOutside(ref, () => setShowModal(false));
+
   useEffect(() => {
-    const filteredEvents = events.filter(
-      (event) =>
-        event.destination == `${dist}-${uuid}` ||
-        event.altDestination == `${dist}-${uuid}`
-    );
-    setDayEvents(filteredEvents);
-  }, [events]);
+    if (events !== null) {
+      const filteredEvents: EventProps[] = events
+        .filter(
+          (event) =>
+            event.destination === `${dist}-${uuid}` ||
+            event.altDestination === `${dist}-${uuid}`
+        )
+        .map((event) => ({
+          emoji: event.emoji,
+          name: event.name,
+          desc: event.desc,
+          destination: modalParent,
+          event,
+          click: useOnClickOutside,
+        }));
+      setDayEvents(filteredEvents);
+    }
+  }, [events, dist, uuid]);
+
   return (
     <div id={`${dist}-${uuid}`}>
       <button
         onClick={() => setShowModal(true)}
         className="px-2 border-black border rounded-full m-2 w-min btn"
       >
-        {uuid.match(/\d+/g)[0]}
+        {uuid.match(/\d+/g)?.[0]}
       </button>
-      {showModal &&
+      {showModal && modalParent && (
         createPortal(
           <div ref={ref}>
             <Modal abc={uuid} onClose={() => setShowModal(false)} dist={dist} />
           </div>,
           modalParent
-        )}
+        )
+      )}
       {dayEvents.map((event) => (
         <Event
-          key={event.id}
-          emoji={event.emoji}
-          name={event.name}
-          desc={event.desc}
-          event={event}
-          destination={modalParent}
-          click={useOnClickOutside}
+          key={event.event.id}
+          {...event}
         />
       ))}
     </div>
   );
 }
-//imported function from stackOverflow
-function useOnClickOutside(ref, handler) {
-  useEffect(
-    () => {
-      const listener = (event) => {
-        // Do nothing if clicking ref's element or descendent elements
-        if (!ref.current || ref.current.contains(event.target)) {
-          return;
-        }
-        handler(event);
-      };
-      document.addEventListener("mousedown", listener);
-      document.addEventListener("touchstart", listener);
-      return () => {
-        document.removeEventListener("mousedown", listener);
-        document.removeEventListener("touchstart", listener);
-      };
-    },
-    // Add ref and handler to effect dependencies
-    // It's worth noting that because the passed-in handler is a new ...
-    // ... function on every render that will cause this effect ...
-    // ... callback/cleanup to run every render. It's not a big deal ...
-    // ... but to optimize you can wrap handler in useCallback before ...
-    // ... passing it into this hook.
-    [ref, handler]
-  );
+
+
+//imported function from
+type EventListener = (event: MouseEvent | TouchEvent) => void;
+
+function useOnClickOutside(
+  ref: RefObject<HTMLElement>,
+  handler: EventListener
+): void {
+  useEffect(() => {
+    const listener: EventListener = (event) => {
+      if (!ref.current || ref.current.contains(event.target as Node)) {
+        return;
+      }
+      handler(event);
+    };
+
+    document.addEventListener('mousedown', listener);
+    document.addEventListener('touchstart', listener);
+
+    return () => {
+      document.removeEventListener('mousedown', listener);
+      document.removeEventListener('touchstart', listener);
+    };
+  }, [ref, handler]);
 }
 
 function Modal({ abc, onClose, dist }) {

@@ -4,19 +4,18 @@ import {
   useEffect,
   createContext,
   useContext,
-  useState,
-  ReactNode,
+    useState,
+    ReactNode,
 } from "react";
-
 //import {initialEvents} from './client.tsx'
 const EventContext = createContext<Event[] | null>(null);
 const EventDispatchContext = createContext<React.Dispatch<Action> | null>(null);
 const YearContext = createContext<number | null>(null);
-const YearChangeContext = createContext<React.Dispatch<
-  React.SetStateAction<number>
-> | null>(null);
+const YearChangeContext = createContext<React.Dispatch<React.SetStateAction<number>> | null>(null);
 
-export function EventsProvider({ children }: { children: ReactNode }) {
+export function EventsProvider({ children }:{
+    children: ReactNode
+}) {
   const date = new Date();
   const [events, dispatch] = useReducer(eventReducer, initialEvents);
   const [year, yearChange] = useState<number>(date.getFullYear());
@@ -50,7 +49,7 @@ export function useEvents() {
 export function useEventsDispatch() {
   return useContext(EventDispatchContext);
 }
-
+ 
 type Event = {
   id: string;
   emoji: string;
@@ -61,15 +60,7 @@ type Event = {
 };
 
 type Action =
-  | {
-      type: "added";
-      id: string;
-      emoji: string;
-      name: string;
-      desc: string;
-      destination: string;
-      altDestination: string;
-    }
+  | { type: "added"; id: string; emoji: string; name: string; desc: string; destination: string; altDestination: string; }
   | { type: "changed"; event: Event }
   | { type: "deleted"; id: string };
 
@@ -105,8 +96,8 @@ function eventReducer(events: Event[], action: Action): Event[] {
 
 let initialEvents: Event[] = [];
 
-if (typeof window !== "undefined") {
-  const storedEvents = localStorage.getItem("my-events");
+if (typeof window !== 'undefined') {
+  const storedEvents = localStorage.getItem('my-events');
   if (storedEvents) {
     initialEvents = JSON.parse(storedEvents) as Event[];
   }

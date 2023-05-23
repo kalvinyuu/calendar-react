@@ -1,8 +1,25 @@
-"use client";
 import { useEventsDispatch } from "./context";
 import { useState, useRef } from "react";
 import { createPortal } from "react-dom";
 //import useOnClickOutside from "./client.tsx";
+
+type Event = {
+  id: string;
+  emoji: string;
+  name: string;
+  desc: string;
+  destination: string;
+  altDestination: string;
+};
+
+export type EventProps = {
+  event: Event;
+  emoji: string;
+  name: string;
+  desc: string;
+  destination: HTMLElement | null;
+  click: (ref: React.RefObject<HTMLElement>, callback: () => void) => void;
+};
 
 export default function Event({
   event,
@@ -11,62 +28,68 @@ export default function Event({
   desc,
   destination,
   click,
-}) {
+}: EventProps) {
   const [isEditing, setEditing] = useState(false);
   const [isVisible, setVisible] = useState(false);
-  const ref = useRef();
+  const ref = useRef<HTMLDivElement>(null);
   click(ref, () => setVisible(false));
   const dispatch = useEventsDispatch();
-  //localStorageUploader()
-  let EventContent;
+  let EventContent: JSX.Element;
   if (isEditing) {
-    //edit
-    EventContent = (
+   EventContent = (
       <span className="flex flex-col absolute">
         <input
           value={emoji}
-          onChange={(e) => {
-            dispatch({
-              type: "changed",
-              event: {
-                ...event,
-                emoji: e.target.value,
-              },
-            });
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            if (dispatch) {
+              dispatch({
+                type: "changed",
+                event: {
+                  ...event,
+                  emoji: e.target.value,
+                },
+              });
+            }
           }}
         />
         <input
           value={name}
-          onChange={(e) => {
-            dispatch({
-              type: "changed",
-              event: {
-                ...event,
-                name: e.target.value,
-              },
-            });
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            if (dispatch) {
+              dispatch({
+                type: "changed",
+                event: {
+                  ...event,
+                  name: e.target.value,
+                },
+              });
+            }
           }}
         />
         <input
           value={desc}
-          onChange={(e) => {
-            dispatch({
-              type: "changed",
-              event: {
-                ...event,
-                desc: e.target.value,
-              },
-            });
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            if (dispatch) {
+              dispatch({
+                type: "changed",
+                event: {
+                  ...event,
+                  desc: e.target.value,
+                },
+              });
+            }
           }}
         />
         <span>
           <button onClick={() => setEditing(false)}>save</button>
           <button
             onClick={() => {
-              dispatch({
-                type: "deleted",
-                id: event.id,
-              });
+              if (dispatch) {
+                dispatch({
+                  type: "deleted",
+                  id: event.id,
+                });
+              }
             }}
           >
             remove
@@ -84,6 +107,7 @@ export default function Event({
           {emoji}
         </a>
         {isVisible &&
+          destination &&
           createPortal(
             <div ref={ref} className="overflow-visible absolute bg-white p-8">
               <div className="">
@@ -94,10 +118,12 @@ export default function Event({
                 <button onClick={() => setEditing(true)}>edit</button>
                 <button
                   onClick={() => {
-                    dispatch({
-                      type: "deleted",
-                      id: event.id,
-                    });
+                    if (dispatch) {
+                      dispatch({
+                        type: "deleted",
+                        id: event.id,
+                      });
+                    }
                   }}
                 >
                   remove
@@ -113,86 +139,75 @@ export default function Event({
   return <>{EventContent}</>;
 }
 
-export function Alt({ event }) {
+type AltProps = {
+  event: Event;
+};
+
+export function Alt({ event }: AltProps) {
   const [isEditing, setEditing] = useState(false);
   const dispatch = useEventsDispatch();
-  if (isEditing) {
-    var EventContent = (
-      <span className="flex flex-col absolute">
-        <input
-          value={event.emoji}
-          onChange={(e) => {
-            dispatch({
-              type: "changed",
-              event: {
-                ...event,
-                emoji: e.target.value,
-              },
-            });
-          }}
-        />
-        <input
-          value={event.name}
-          onChange={(e) => {
-            dispatch({
-              type: "changed",
-              event: {
-                ...event,
-                name: e.target.value,
-              },
-            });
-          }}
-        />
-        <input
-          value={event.desc}
-          onChange={(e) => {
-            dispatch({
-              type: "changed",
-              event: {
-                ...event,
-                desc: e.target.value,
-              },
-            });
-          }}
-        />
-        <span>
-          <button onClick={() => setEditing(false)}>save</button>
-          <button
-            onClick={() => {
-              dispatch({
-                type: "deleted",
-                id: event.id,
-              });
-            }}
-          >
-            remove
-          </button>
-        </span>
-      </span>
-    );
-  } else {
-    var EventContent = (
-      <>
-        {event.emoji}
-        <div className="">
-          <h3>{event.name}</h3>
-          <p>{event.desc}</p>
-        </div>
-        <div className="">
-          <button onClick={() => setEditing(true)}>edit</button>
-          <button
-            onClick={() => {
-              dispatch({
-                type: "deleted",
-                id: event.id,
-              });
-            }}
-          >
-            remove
-          </button>
-        </div>
-      </>
-    );
+
+const handleEmojiChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const updatedEvent = { ...event, emoji: e.target.value };
+  if (dispatch) {
+    dispatch({ type: "changed", event: updatedEvent });
   }
-  return <>{EventContent}</>;
+};
+
+const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const updatedEvent = { ...event, name: e.target.value };
+  if (dispatch) {
+    dispatch({ type: "changed", event: updatedEvent });
+  }
+};
+
+const handleDescChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const updatedEvent = { ...event, desc: e.target.value };
+  if (dispatch) {
+    dispatch({ type: "changed", event: updatedEvent });
+  }
+};
+
+const handleRemove = () => {
+  if (dispatch) {
+    dispatch({ type: "deleted", id: event.id });
+  }
+};
+
+const handleSave = () => {
+  setEditing(false);
+};
+
+const handleEdit = () => {
+  setEditing(true);
+};
+
+
+  return (
+    <div>
+      {isEditing ? (
+        <div className="flex flex-col absolute">
+          <input value={event.emoji} onChange={handleEmojiChange} />
+          <input value={event.name} onChange={handleNameChange} />
+          <input value={event.desc} onChange={handleDescChange} />
+          <div>
+            <button onClick={handleSave}>save</button>
+            <button onClick={handleRemove}>remove</button>
+          </div>
+        </div>
+      ) : (
+        <div>
+          {event.emoji}
+          <div>
+            <h3>{event.name}</h3>
+            <p>{event.desc}</p>
+          </div>
+          <div>
+            <button onClick={handleEdit}>edit</button>
+            <button onClick={handleRemove}>remove</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
