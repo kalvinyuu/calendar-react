@@ -1,7 +1,14 @@
 import { months, Month } from "../../grid";
 import { EventsProvider } from "../../context";
 
-export default function Page({ params }) {
+interface PageProps {
+  params: {
+    year: number;
+    eachMonth: string;
+  };
+}
+
+export default function Page({ params }: PageProps) {
   let fragment;
   if (months.find((el) => el === params.eachMonth) === undefined) {
     fragment = <h1> 404 Error</h1>;

@@ -43,7 +43,7 @@ export function isLeap(x: number) {
   }
 }
 
-export function daysInMon(x: string[], y: number[]) {
+export function daysInMon(y: number[]) {
   for (let i = 0; i <= 11; i++) {
     if (i == 1) {
       monLen.push(y[0]);
@@ -113,7 +113,7 @@ export function Month({
     firstDay = [];
     const dayOfDoom = new Date(`March 14, ${year}`).getDay();
     isLeap(year);
-    daysInMon(months, days);
+    daysInMon(days);
     getDay(doomsDay, dayOfDoom);
     arr42();
     arrSplit();
@@ -275,7 +275,7 @@ export default function TriGrid({ year }: { year: number }) {
   firstDay = [];
   monCal = [[], [], [], [], [], [], [], [], [], [], [], []];
   isLeap(year);
-  daysInMon(months, days);
+  daysInMon(days);
   getDay(doomsDay, dayOfDoom);
   arr42();
   arrSplit();

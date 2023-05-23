@@ -52,7 +52,7 @@ export function useEventsDispatch() {
 }
 
 type Event = {
-  id: string;
+  id: number;
   emoji: string;
   name: string;
   desc: string;
@@ -63,7 +63,7 @@ type Event = {
 type Action =
   | {
       type: "added";
-      id: string;
+      id: number;
       emoji: string;
       name: string;
       desc: string;
@@ -71,7 +71,7 @@ type Action =
       altDestination: string;
     }
   | { type: "changed"; event: Event }
-  | { type: "deleted"; id: string };
+  | { type: "deleted"; id: number };
 
 function eventReducer(events: Event[], action: Action): Event[] {
   switch (action.type) {

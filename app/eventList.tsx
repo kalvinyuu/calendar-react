@@ -3,8 +3,8 @@ import { useState, useRef } from "react";
 import { createPortal } from "react-dom";
 //import useOnClickOutside from "./client.tsx";
 
-type Event = {
-  id: string;
+export type Event = {
+  id: number;
   emoji: string;
   name: string;
   desc: string;
@@ -36,7 +36,7 @@ export default function Event({
   const dispatch = useEventsDispatch();
   let EventContent: JSX.Element;
   if (isEditing) {
-   EventContent = (
+    EventContent = (
       <span className="flex flex-col absolute">
         <input
           value={emoji}
@@ -147,41 +147,40 @@ export function Alt({ event }: AltProps) {
   const [isEditing, setEditing] = useState(false);
   const dispatch = useEventsDispatch();
 
-const handleEmojiChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const updatedEvent = { ...event, emoji: e.target.value };
-  if (dispatch) {
-    dispatch({ type: "changed", event: updatedEvent });
-  }
-};
+  const handleEmojiChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const updatedEvent = { ...event, emoji: e.target.value };
+    if (dispatch) {
+      dispatch({ type: "changed", event: updatedEvent });
+    }
+  };
 
-const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const updatedEvent = { ...event, name: e.target.value };
-  if (dispatch) {
-    dispatch({ type: "changed", event: updatedEvent });
-  }
-};
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const updatedEvent = { ...event, name: e.target.value };
+    if (dispatch) {
+      dispatch({ type: "changed", event: updatedEvent });
+    }
+  };
 
-const handleDescChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const updatedEvent = { ...event, desc: e.target.value };
-  if (dispatch) {
-    dispatch({ type: "changed", event: updatedEvent });
-  }
-};
+  const handleDescChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const updatedEvent = { ...event, desc: e.target.value };
+    if (dispatch) {
+      dispatch({ type: "changed", event: updatedEvent });
+    }
+  };
 
-const handleRemove = () => {
-  if (dispatch) {
-    dispatch({ type: "deleted", id: event.id });
-  }
-};
+  const handleRemove = () => {
+    if (dispatch) {
+      dispatch({ type: "deleted", id: event.id });
+    }
+  };
 
-const handleSave = () => {
-  setEditing(false);
-};
+  const handleSave = () => {
+    setEditing(false);
+  };
 
-const handleEdit = () => {
-  setEditing(true);
-};
-
+  const handleEdit = () => {
+    setEditing(true);
+  };
 
   return (
     <div>

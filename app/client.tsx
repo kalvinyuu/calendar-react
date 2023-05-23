@@ -1,5 +1,5 @@
-'use client'
-import { useState, useEffect, useRef } from "react";
+"use client";
+import { useState, useEffect, useRef, RefObject } from "react";
 import { createPortal } from "react-dom";
 import { useEventsDispatch, useEvents } from "./context";
 import Event, { EventProps } from "./eventList";
@@ -15,9 +15,12 @@ export default function TableDate({
   const [dayEvents, setDayEvents] = useState<EventProps[]>([]);
   const events = useEvents();
   const [showModal, setShowModal] = useState(false);
-  const modalParent = typeof window !== "undefined" ? document.getElementById(`${dist}-${uuid}`) : null;
+  const modalParent =
+    typeof window !== "undefined"
+      ? document.getElementById(`${dist}-${uuid}`)
+      : null;
   const ref = useRef<HTMLDivElement>(null);
- 
+
   useOnClickOutside(ref, () => setShowModal(false));
 
   useEffect(() => {
@@ -48,24 +51,20 @@ export default function TableDate({
       >
         {uuid.match(/\d+/g)?.[0]}
       </button>
-      {showModal && modalParent && (
+      {showModal &&
+        modalParent &&
         createPortal(
           <div ref={ref}>
             <Modal abc={uuid} onClose={() => setShowModal(false)} dist={dist} />
           </div>,
           modalParent
-        )
-      )}
+        )}
       {dayEvents.map((event) => (
-        <Event
-          key={event.event.id}
-          {...event}
-        />
+        <Event key={event.event.id} {...event} />
       ))}
     </div>
   );
 }
-
 
 //imported function from
 type EventListener = (event: MouseEvent | TouchEvent) => void;
@@ -82,47 +81,60 @@ function useOnClickOutside(
       handler(event);
     };
 
-    document.addEventListener('mousedown', listener);
-    document.addEventListener('touchstart', listener);
+    document.addEventListener("mousedown", listener);
+    document.addEventListener("touchstart", listener);
 
     return () => {
-      document.removeEventListener('mousedown', listener);
-      document.removeEventListener('touchstart', listener);
+      document.removeEventListener("mousedown", listener);
+      document.removeEventListener("touchstart", listener);
     };
   }, [ref, handler]);
 }
 
-function Modal({ abc, onClose, dist }) {
-  //AddList.js
+function Modal({
+  abc,
+  onClose,
+  dist,
+}: {
+  abc: string;
+  onClose: () => void;
+  dist: string;
+}) {
   const [emoji, setEmoji] = useState("");
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
-  let alt: string;
+  let alt: string | null = null; // Initialize alt with null
   let altDist: string;
   const dispatch = useEventsDispatch();
   const events = useEvents();
+
   function opositer() {
     if (dist === "gen") {
       altDist = "cc";
     } else {
       altDist = "gen";
     }
-    altModalParent = document.getElementById(`${altDist}-${abc}`);
+    altModalParent = document.getElementById(
+      `${altDist}-${abc}`
+    ) as HTMLElement;
     altModalParent === null ? (alt = null) : (alt = `${altDist}-${abc}`);
   }
+
   function submit() {
     setDesc("");
     setEmoji("");
     setName("");
-    dispatch({
-      type: "added",
-      id: events.length,
-      emoji: emoji,
-      name: name,
-      desc: desc,
-      destination: `${dist}-${abc}`,
-      altDestination: `${alt}`,
-    });
+    if (dispatch) {
+      dispatch({
+        type: "added",
+        id: events ? events.length : 0,
+        emoji: emoji,
+        name: name,
+        desc: desc,
+        destination: `${dist}-${abc}`,
+        altDestination: alt || "", // Provide a default empty string if alt is null
+      });
+    }
   }
   return (
     <div className="flex-col absolute bg-slate-500 p-6 rounded-md space-y-2 overflow-visible">

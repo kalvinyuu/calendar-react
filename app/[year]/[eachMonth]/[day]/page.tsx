@@ -1,13 +1,6 @@
 "use client";
-import { Alt } from "../../../eventList";
-import {
-  months,
-  monLen,
-  days,
-  doomsDay,
-  isLeap,
-  daysInMon,
-} from "../../../grid";
+import { Alt, Event as EventType } from "../../../eventList";
+import { months, monLen, days, daysInMon } from "../../../grid";
 import { useEvents } from "../../../context";
 import { useState, useEffect } from "react";
 
@@ -16,18 +9,21 @@ export default function Content({
 }: {
   params: { day: number; eachMonth: string; year: number };
 }) {
-  const [dayEvents, setDayEvents] = useState([]);
+  const [dayEvents, setDayEvents] = useState<EventType[]>([]); // Use the correct Event type
   console.log(monLen);
   const events = useEvents();
-  daysInMon(months, days);
+  daysInMon(days);
   useEffect(() => {
-    const filteredEvents = events.filter(
-      (event) =>
-        event.destination ==
-        `gen-${params.day}-${params.eachMonth}-${params.year}`
-    );
-    setDayEvents(filteredEvents);
-  }, [events]);
+    const filteredEvents =
+      events &&
+      events.filter(
+        (event) =>
+          event.destination ===
+          `gen-${params.day}-${params.eachMonth}-${params.year}`
+      );
+    setDayEvents(filteredEvents || []);
+  }, [events, params]);
+
   if (
     Number(params.day) < 1 ||
     Number(params.day) >
