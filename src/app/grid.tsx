@@ -153,7 +153,7 @@ export function Month({
                       dist="cc"
                       uuid={`${theDay}-${months[11]}-${year - 1}`}
                     />
-                    <Link href={`${year}/${month[11]}/${theDay}`}>
+                    <Link href={`${year - 1}/${months[11]}/${theDay}`}>
                       <Image
                         alt="link"
                         src="/../public/images/linkIcon.svg"
@@ -170,7 +170,7 @@ export function Month({
                       dist="cc"
                       uuid={`${theDay}-${months[i - 1]}-${year}`}
                     />
-                    <Link href={`${year}/${month[i - 1]}/${theDay}`}>
+                    <Link href={`${year}/${months[i - 1]}/${theDay}`}>
                       <Image
                         alt="link"
                         src="/../public/images/linkIcon.svg"
@@ -187,7 +187,7 @@ export function Month({
                       dist="cc"
                       uuid={`${theDay}-${months[0]}-${year + 1}`}
                     />
-                    <Link href={`${year}/${month[0]}/${theDay}`}>
+                    <Link href={`${year + 1}/${months[0]}/${theDay}`}>
                       <Image
                         alt="link"
                         src="/../public/images/linkIcon.svg"
@@ -204,7 +204,7 @@ export function Month({
                       dist="cc"
                       uuid={`${theDay}-${months[i + 1]}-${year}`}
                     />
-                    <Link href={`${year}/${month[i + 1]}/${theDay}`}>
+                    <Link href={`${year}/${months[i + 1]}/${theDay}`}>
                       <Image
                         alt="link"
                         src="/../public/images/linkIcon.svg"

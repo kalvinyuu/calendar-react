@@ -9,6 +9,7 @@ const nextConfig = {
 module.exports = {
     images: {
 	dangerouslyAllowSVG: true,
-	contentDispositionType: 'attachment'
+	contentDispositionType: 'attachment',
+	domains: ['nitter.net'],
     },
 };
