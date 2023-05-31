@@ -1,6 +1,5 @@
 import TableDate from "./client";
 import Link from "next/link";
-import Image from "next/image";
 //import { useYear } from "./context";
 
 export const months = [
@@ -154,12 +153,7 @@ export function Month({
                       uuid={`${theDay}-${months[11]}-${year - 1}`}
                     />
                     <Link href={`${year - 1}/${months[11]}/${theDay}`}>
-                      <Image
-                        alt="link"
-                        src="/../public/images/linkIcon.svg"
-                        width={12}
-                        height={12}
-                      />
+			o
                     </Link>
                   </td>
                 );
@@ -171,12 +165,7 @@ export function Month({
                       uuid={`${theDay}-${months[i - 1]}-${year}`}
                     />
                     <Link href={`${year}/${months[i - 1]}/${theDay}`}>
-                      <Image
-                        alt="link"
-                        src="/../public/images/linkIcon.svg"
-                        width={12}
-                        height={12}
-                      />
+			o
                     </Link>
                   </td>
                 );
@@ -188,12 +177,7 @@ export function Month({
                       uuid={`${theDay}-${months[0]}-${year + 1}`}
                     />
                     <Link href={`${year + 1}/${months[0]}/${theDay}`}>
-                      <Image
-                        alt="link"
-                        src="/../public/images/linkIcon.svg"
-                        width={12}
-                        height={12}
-                      />
+			o
                     </Link>
                   </td>
                 );
@@ -205,12 +189,7 @@ export function Month({
                       uuid={`${theDay}-${months[i + 1]}-${year}`}
                     />
                     <Link href={`${year}/${months[i + 1]}/${theDay}`}>
-                      <Image
-                        alt="link"
-                        src="/../public/images/linkIcon.svg"
-                        width={12}
-                        height={12}
-                      />
+			o
                     </Link>
                   </td>
                 );
@@ -219,12 +198,7 @@ export function Month({
                   <td className="border-t border-black whitespace-nowrap">
                     <TableDate dist="gen" uuid={`${theDay}-${month}-${year}`} />
                     <Link href={`${year}/${month}/${theDay}`}>
-                      <Image
-                        alt="link"
-                        src="/../public/images/linkIcon.svg"
-                        width={12}
-                        height={12}
-                      />
+                      o
                     </Link>
                   </td>
                 );
@@ -280,7 +254,7 @@ export default function TriGrid({ year }: { year: number }) {
   arr42();
   arrSplit();
   return (
-    <div id="home" className="bg-slate-400 overflow-visible">
+    <div id="home" className="bg-slate-400 overflow-visible"
       <Grid start={0} end={3} pic="bg-snow" col="bg-[#666666]/60" year={year} />
       <Grid
         start={4}
