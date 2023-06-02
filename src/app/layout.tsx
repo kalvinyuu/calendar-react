@@ -14,7 +14,7 @@ export default function RootLayout({
       <body>
         <EventsProvider>
           <nav>
-            <Year />
+            <Year/>
           </nav>
           {children}
         </EventsProvider>

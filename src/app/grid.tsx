@@ -125,7 +125,7 @@ export function Month({
             if (day === "Sunday" || day === "Saturday") {
               return (
                 <th className="text-indigo-900 border-y-2 border-black px-2 py-1.5 font-mono font-medium mx-2">
-                  <span>{day[0]}</span>
+                  <span>{day[0]}</span> 
                   <span className="collapse md:visible">{day.slice(1, 3)}</span>
                 </th>
               );
@@ -153,7 +153,7 @@ export function Month({
                       uuid={`${theDay}-${months[11]}-${year - 1}`}
                     />
                     <Link href={`${year - 1}/${months[11]}/${theDay}`}>
-			<p>o</p>
+			<p>-&gt;</p>
                     </Link>
                   </td>
                 );
@@ -165,7 +165,7 @@ export function Month({
                       uuid={`${theDay}-${months[i - 1]}-${year}`}
                     />
                     <Link href={`${year}/${months[i - 1]}/${theDay}`}>
-			<p>o</p>
+			<p>-&gt;</p>
                     </Link>
                   </td>
                 );
@@ -177,7 +177,7 @@ export function Month({
                       uuid={`${theDay}-${months[0]}-${year + 1}`}
                     />
                     <Link href={`${year + 1}/${months[0]}/${theDay}`}>
-			<p>o</p>
+			<p>-&gt;</p>
                     </Link>
                   </td>
                 );
@@ -189,7 +189,7 @@ export function Month({
                       uuid={`${theDay}-${months[i + 1]}-${year}`}
                     />
                     <Link href={`${year}/${months[i + 1]}/${theDay}`}>
-			<p>o</p>
+			<p>-&gt;</p>
                     </Link>
                   </td>
                 );
@@ -198,7 +198,7 @@ export function Month({
                   <td className="border-t border-black whitespace-nowrap">
                     <TableDate dist="gen" uuid={`${theDay}-${month}-${year}`} />
                     <Link href={`${year}/${month}/${theDay}`}>
-			<p>o</p>
+			<p>-&gt;</p>
                     </Link>
                   </td>
                 );
